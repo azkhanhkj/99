@@ -18,7 +18,7 @@ jobs:
       - name: Create user
         run: |
           $User = "ServerPremium"
-          $Pass = "ServerPremium@123" 
+          $Pass = "ServerPre@123" 
           net user $User $Pass /add
           net localgroup administrators $User /add
           net localgroup "Remote Desktop Users" $User /add
@@ -35,7 +35,7 @@ jobs:
           Write-Host "------------------------------------------"
           $tsIP = (Get-NetIPAddress -InterfaceAlias 'Tailscale' -AddressFamily IPv4).IPAddress
           Write-Host "IP ĐỂ KẾT NỐI: $tsIP"
-          Write-Host "User: ServerPremium | Pass: ServerPremium@123"
+          Write-Host "User: ServerPremium | Pass: ServerPre@123"
           Write-Host "------------------------------------------"
 
       - name: 6. Duy trì máy (6 tiếng)
