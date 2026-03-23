@@ -1,59 +1,62 @@
 name: Premium server
+
 on:
-  workflow_dispatch: # Chạy bằng tay khi bạn muốn
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-2022
+
     steps:
-	  - name: Run tweak network
-	    run: |
-		  Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
-		  Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0 -Force
-		  Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "SecurityLayer" -Value 0 -Force
+      - name: Run tweak network
+        shell: powershell
+        run: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0 -Force
-		  netsh advfirewall firewall add rule name="RDP-Premium" dir=in action=allow protocol=TCP localport=3389 profile=any
-          netsh advfirewall firewall add rule name="RDP-Premium-Out" dir=out action=allow protocol=TCP localport=3389 profile=any
-		  Set-Service -Name TermService -StartupType Automatic -ErrorAction SilentlyContinue
-          Set-Service -Name UmRdpService -StartupType Automatic -ErrorAction SilentlyContinue
-          Start-Service -Name TermService -ErrorAction SilentlyContinue
-          Start-Service -Name UmRdpService -ErrorAction SilentlyContinue
-      - name: Install tailscale
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "SecurityLayer" -Value 0 -Force
+
+          netsh advfirewall firewall add rule name="RDP-Premium" dir=in action=allow protocol=TCP localport=3389
+          netsh advfirewall firewall add rule name="RDP-Premium-Out" dir=out action=allow protocol=TCP localport=3389
+
+          Set-Service -Name TermService -StartupType Automatic
+          Start-Service -Name TermService
+
+      - name: Install Tailscale
+        shell: powershell
         run: |
           Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe" -OutFile "tailscale-setup.exe"
           Start-Process -FilePath "tailscale-setup.exe" -ArgumentList "/quiet", "/norestart" -Wait
-          
-      - name: Connect to tailscale
+
+      - name: Connect to Tailscale
+        shell: powershell
         run: |
-          & "C:\Program Files\Tailscale\tailscale.exe" up --authkey ${{ secrets.TAILSCALE_AUTHKEY }}
-          
+          & "C:\Program Files\Tailscale\tailscale.exe" up --authkey "${{ secrets.TAILSCALE_AUTHKEY }}" --accept-routes
+
       - name: Create user
+        shell: powershell
         run: |
           $User = "ServerPremium"
-          $Pass = "ServerPre@123" 
+          $Pass = "ServerPre@123"
+
           net user $User $Pass /add
           net localgroup administrators $User /add
           net localgroup "Remote Desktop Users" $User /add
 
-      - name: AntiVM
-        run: |
-          reg add "HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System\CentralProcessor\0" /v "ProcessorNameString" /t REG_SZ /d "Intel(R) Core(TM) i7-10700K CPU @ 3.80GHz" /f
-          reg add "HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemManufacturer" /t REG_SZ /d "ASUSTeK COMPUTER INC." /f
-          reg add "HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemProductName" /t REG_SZ /d "ROG STRIX Z490-E GAMING" /f
-          Set-Service -Name "VMTools" -Status Stopped -ErrorAction SilentlyContinue
-
       - name: Show IP and credentials
+        shell: powershell
         run: |
           Write-Host "------------------------------------------"
-          $tsIP = (Get-NetIPAddress -InterfaceAlias 'Tailscale' -AddressFamily IPv4).IPAddress
-          Write-Host "IP ĐỂ KẾT NỐI: $tsIP"
-          Write-Host "User: ServerPremium | Pass: ServerPre@123"
+          $tsIP = (Get-NetIPAddress -InterfaceAlias 'Tailscale' -AddressFamily IPv4 | Select-Object -First 1).IPAddress
+          Write-Host "IP: $tsIP"
+          Write-Host "User: ServerPremium"
+          Write-Host "Pass: ServerPre@123"
           Write-Host "------------------------------------------"
 
-      - name: Loop
+      - name: Keep alive
+        shell: powershell
         run: |
           $seconds = 21600
           for ($i = 0; $i -lt $seconds; $i += 10) {
-            Write-Host "Đang chạy... $i / $seconds giây"
+            Write-Host "Running... $i / $seconds seconds"
             Start-Sleep -Seconds 10
           }
