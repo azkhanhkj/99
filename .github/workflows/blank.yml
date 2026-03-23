@@ -11,12 +11,12 @@ on:
         options:
         - '1h'
         - '3h' 
-        - '5h40m'
+        - '5h50m'
 
 jobs:
   Premium-RDP-Setup:
-    runs-on: windows-latest
-    timeout-minutes: 340
+    runs-on: windows-2022
+    timeout-minutes: 350
     
     steps:
       # BANNER CHÀO MỪNG
