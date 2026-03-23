@@ -6,6 +6,18 @@ jobs:
   build:
     runs-on: windows-2022
     steps:
+	  - name: Run tweak network
+	    run: |
+		  Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0 -Force
+		  Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0 -Force
+		  Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "SecurityLayer" -Value 0 -Force
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 0 -Force
+		  netsh advfirewall firewall add rule name="RDP-Premium" dir=in action=allow protocol=TCP localport=3389 profile=any
+          netsh advfirewall firewall add rule name="RDP-Premium-Out" dir=out action=allow protocol=TCP localport=3389 profile=any
+		  Set-Service -Name TermService -StartupType Automatic -ErrorAction SilentlyContinue
+          Set-Service -Name UmRdpService -StartupType Automatic -ErrorAction SilentlyContinue
+          Start-Service -Name TermService -ErrorAction SilentlyContinue
+          Start-Service -Name UmRdpService -ErrorAction SilentlyContinue
       - name: Install tailscale
         run: |
           Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe" -OutFile "tailscale-setup.exe"
@@ -30,7 +42,7 @@ jobs:
           reg add "HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System\BIOS" /v "SystemProductName" /t REG_SZ /d "ROG STRIX Z490-E GAMING" /f
           Set-Service -Name "VMTools" -Status Stopped -ErrorAction SilentlyContinue
 
-      - name: 5. Tải sẵn Roblox và Hiện IP
+      - name: Show IP and credentials
         run: |
           Write-Host "------------------------------------------"
           $tsIP = (Get-NetIPAddress -InterfaceAlias 'Tailscale' -AddressFamily IPv4).IPAddress
@@ -38,7 +50,7 @@ jobs:
           Write-Host "User: ServerPremium | Pass: ServerPre@123"
           Write-Host "------------------------------------------"
 
-      - name: 6. Duy trì máy (6 tiếng)
+      - name: Loop
         run: |
           $seconds = 21600
           for ($i = 0; $i -lt $seconds; $i += 10) {
