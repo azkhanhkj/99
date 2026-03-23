@@ -17,8 +17,8 @@ jobs:
           
       - name: Create user
         run: |
-          $User = "server_premium"
-          $Pass = "server_premium" 
+          $User = "ServerPremium"
+          $Pass = "ServerPremium@123" 
           net user $User $Pass /add
           net localgroup administrators $User /add
           net localgroup "Remote Desktop Users" $User /add
@@ -35,13 +35,13 @@ jobs:
           Write-Host "------------------------------------------"
           $tsIP = (Get-NetIPAddress -InterfaceAlias 'Tailscale' -AddressFamily IPv4).IPAddress
           Write-Host "IP ĐỂ KẾT NỐI: $tsIP"
-          Write-Host "User: server_premium | Pass: server_premium"
+          Write-Host "User: ServerPremium | Pass: ServerPremium@123"
           Write-Host "------------------------------------------"
 
       - name: 6. Duy trì máy (6 tiếng)
         run: |
           $seconds = 21600
-          for ($i = 0; $i -lt $seconds; $i += 10) {
-            Write-Host "Đang chạy... $i / $seconds giây"
-            Start-Sleep -Seconds 10
-          }
+		  for ($i = 0; $i -lt $seconds; $i += 10) {
+		    Write-Host "Đang chạy... $i / $seconds giây"
+		    Start-Sleep -Seconds 10
+		  }
