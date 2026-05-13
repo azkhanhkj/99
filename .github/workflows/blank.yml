@@ -8,16 +8,8 @@ jobs:
     runs-on: windows-2022
 
     steps:
-      - name: Install Tailscale
-        shell: powershell
-        run: |
-          Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe" -OutFile "tailscale-setup.exe"
-          Start-Process -FilePath "tailscale-setup.exe" -ArgumentList "/quiet", "/norestart" -Wait
-
-      - name: Connect to Tailscale
-        shell: powershell
-        run: |
-          & "C:\Program Files\Tailscale\tailscale.exe" up --authkey "${{ secrets.TAILSCALE_AUTHKEY }}" --accept-routes
+      - name: Install Cloudflared
+        run: choco install cloudflared -y
 
       - name: Create user
         shell: powershell
@@ -29,12 +21,14 @@ jobs:
           net localgroup administrators $User /add
           net localgroup "Remote Desktop Users" $User /add
 
-      - name: Show IP and credentials
+      - name: Start Cloudflare Tunnel
+        run: cloudflared service install ${{ secrets.CF_TOKEN }}
+
+      - name: Show credentials
         shell: powershell
         run: |
           Write-Host "------------------------------------------"
-          $tsIP = (Get-NetIPAddress -InterfaceAlias 'Tailscale' -AddressFamily IPv4 | Select-Object -First 1).IPAddress
-          Write-Host "IP: $tsIP"
+          Write-Host "RDP Host: ${{ secrets.CF_HOSTNAME }}"
           Write-Host "User: ServerPremium"
           Write-Host "Pass: ServerPre@123"
           Write-Host "------------------------------------------"
