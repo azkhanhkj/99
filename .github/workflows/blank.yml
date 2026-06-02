@@ -36,7 +36,7 @@ jobs:
       - name: Keep alive
         shell: powershell
         run: |
-          $seconds = 21600
+          $seconds = 21500
           for ($i = 0; $i -lt $seconds; $i += 10) {
             Write-Host "Running... $i / $seconds seconds"
             Start-Sleep -Seconds 10
