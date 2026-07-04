@@ -11,6 +11,22 @@ jobs:
       - name: Install Cloudflared
         run: choco install cloudflared -y
 
+      - name: Install Cloudflared
+        shell: powershell
+        run: |
+          choco install cloudflared -y
+
+      - name: Enable RDP
+        shell: powershell
+        run: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' `
+            -Name "fDenyTSConnections" -Value 0
+
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+
+          Start-Service TermService
+          Set-Service TermService -StartupType Automatic
+
       - name: Create user
         shell: powershell
         run: |
