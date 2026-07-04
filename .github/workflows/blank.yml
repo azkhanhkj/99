@@ -27,6 +27,18 @@ jobs:
           Start-Service TermService
           Set-Service TermService -StartupType Automatic
 
+      - name: Reset RDP sessions
+        shell: powershell
+        run: |
+          query session
+          $sessions = (query session | Select-String "Disc").ToString()
+          foreach ($line in $sessions) {
+            $id = ($line -split '\s+')[-1]
+            if ($id -match '^\d+$') {
+              logoff $id
+            }
+          }
+
       - name: Create user
         shell: powershell
         run: |
