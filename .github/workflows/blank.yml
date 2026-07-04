@@ -11,33 +11,11 @@ jobs:
       - name: Install Cloudflared
         run: choco install cloudflared -y
 
-      - name: Install Cloudflared
-        shell: powershell
+      - name: Enable Remote Desktop
         run: |
-          choco install cloudflared -y
-
-      - name: Enable RDP
-        shell: powershell
-        run: |
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' `
-            -Name "fDenyTSConnections" -Value 0
-
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
           Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-
-          Start-Service TermService
-          Set-Service TermService -StartupType Automatic
-
-      - name: Reset RDP sessions
-        shell: powershell
-        run: |
-          query session
-          $sessions = (query session | Select-String "Disc").ToString()
-          foreach ($line in $sessions) {
-            $id = ($line -split '\s+')[-1]
-            if ($id -match '^\d+$') {
-              logoff $id
-            }
-          }
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 1
 
       - name: Create user
         shell: powershell
