@@ -5,17 +5,11 @@ on:
 
 jobs:
   build:
-    runs-on: windows-11-arm
+    runs-on: windows-2022
 
     steps:
       - name: Install Cloudflared
         run: choco install cloudflared -y
-
-      - name: Enable Remote Desktop
-        run: |
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
-          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 1
 
       - name: Create user
         shell: powershell
