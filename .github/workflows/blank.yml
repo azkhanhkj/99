@@ -8,8 +8,11 @@ jobs:
     runs-on: windows-2022
 
     steps:
-      - name: Install Cloudflared
-        run: choco install cloudflared -y
+      - name: Install Applications
+        shell: cmd
+        run: |
+          choco feature enable -n allowGlobalConfirmation
+          choco install cloudflared opencode-desktop intellijidea-community
 
       - name: Create user
         shell: powershell
@@ -22,22 +25,26 @@ jobs:
           net localgroup "Remote Desktop Users" $User /add
 
       - name: Start Cloudflare Tunnel
-        run: cloudflared service install ${{ secrets.CF_TOKEN }}
+        shell: powershell
+        run: cloudflared.exe service install ${{ secrets.CF_TOKEN }}
 
       - name: Show credentials
         shell: powershell
         run: |
-          Write-Host "------------------------------------------"
-          Write-Host "RDP Host: ${{ secrets.CF_HOSTNAME }}"
-          Write-Host "User: ServerPremium"
-          Write-Host "Pass: ServerPre@123"
-          Write-Host "------------------------------------------"
+          Write-Host ""
+          Write-Host "=========================================="
+          Write-Host "RDP Host : ${{ secrets.CF_HOSTNAME }}"
+          Write-Host "User     : ServerPremium"
+          Write-Host "Password : ServerPre@123"
+          Write-Host "=========================================="
+          Write-Host ""
 
       - name: Keep alive
         shell: powershell
         run: |
           $seconds = 21500
+
           for ($i = 0; $i -lt $seconds; $i += 10) {
-            Write-Host "Running... $i / $seconds seconds"
-            Start-Sleep -Seconds 10
+              Write-Host "Running... $i / $seconds seconds"
+              Start-Sleep -Seconds 10
           }
