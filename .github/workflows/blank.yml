@@ -12,7 +12,7 @@ jobs:
         shell: cmd
         run: |
           choco feature enable -n allowGlobalConfirmation
-          choco install cloudflared opencode-desktop intellijidea-community evkey github-desktop --no-progress
+          choco install cloudflared opencode-desktop intellijidea-community github-desktop --no-progress
 
       - name: Create user
         shell: powershell
