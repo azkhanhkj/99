@@ -8,12 +8,6 @@ jobs:
     runs-on: windows-2022
 
     steps:
-      - name: Install Applications
-        shell: cmd
-        run: |
-          choco feature enable -n allowGlobalConfirmation
-          choco install cloudflared opencode-desktop intellijidea-community github-desktop --no-progress
-
       - name: Create user
         shell: powershell
         run: |
@@ -23,10 +17,6 @@ jobs:
           net user $User $Pass /add
           net localgroup administrators $User /add
           net localgroup "Remote Desktop Users" $User /add
-
-      - name: Start Cloudflare Tunnel
-        shell: powershell
-        run: cloudflared.exe service install ${{ secrets.CF_TOKEN }}
 
       - name: Show credentials
         shell: powershell
@@ -38,6 +28,16 @@ jobs:
           Write-Host "Password : ServerPre@123"
           Write-Host "=========================================="
           Write-Host ""
+
+      - name: Install Applications
+        shell: cmd
+        run: |
+          choco feature enable -n allowGlobalConfirmation
+          choco install cloudflared intellijidea-community --no-progress
+
+      - name: Start Cloudflare Tunnel
+        shell: powershell
+        run: cloudflared.exe service install ${{ secrets.CF_TOKEN }}
 
       - name: Keep alive
         shell: powershell
