@@ -43,13 +43,6 @@ echo ============================================================
 echo.
 
 REM ============================================================
-REM Wait for Windows desktop / network
-REM ============================================================
-
-echo Waiting for Windows desktop...
-timeout /t 5 /nobreak >nul
-
-REM ============================================================
 REM Locate Chocolatey
 REM ============================================================
 
@@ -86,18 +79,6 @@ echo %CHOCO_EXE%
 echo [%DATE% %TIME%] Chocolatey found: %CHOCO_EXE% >> "%LOG_FILE%"
 
 REM ============================================================
-REM Refresh Chocolatey package information
-REM ============================================================
-
-echo.
-echo ============================================================
-echo Updating Chocolatey...
-echo ============================================================
-echo.
-
-"%CHOCO_EXE%" outdated --no-progress >> "%LOG_FILE%" 2>&1
-
-REM ============================================================
 REM Install OpenCode Desktop
 REM ============================================================
 
@@ -107,7 +88,7 @@ echo Installing OpenCode Desktop...
 echo ============================================================
 echo.
 
-"%CHOCO_EXE%" install opencode --yes --no-progress >> "%LOG_FILE%" 2>&1
+"%CHOCO_EXE%" install opencode --yes >> "%LOG_FILE%" 2>&1
 
 if errorlevel 1 (
     echo WARNING: OpenCode installation returned an error.
@@ -127,7 +108,7 @@ echo Installing GitHub Desktop...
 echo ============================================================
 echo.
 
-"%CHOCO_EXE%" install github-desktop --yes --no-progress >> "%LOG_FILE%" 2>&1
+"%CHOCO_EXE%" install github-desktop --yes >> "%LOG_FILE%" 2>&1
 
 if errorlevel 1 (
     echo WARNING: GitHub Desktop installation returned an error.
@@ -147,7 +128,7 @@ echo Installing IntelliJ IDEA Community...
 echo ============================================================
 echo.
 
-"%CHOCO_EXE%" install intellijidea-community --yes --no-progress >> "%LOG_FILE%" 2>&1
+"%CHOCO_EXE%" install intellijidea-community --yes >> "%LOG_FILE%" 2>&1
 
 if errorlevel 1 (
     echo WARNING: IntelliJ IDEA installation returned an error.
