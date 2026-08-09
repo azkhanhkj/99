@@ -3,48 +3,61 @@ name: Premium server
 on:
   workflow_dispatch:
 
+env:
+  PREMIUM_USERNAME: ServerPremium
+  PREMIUM_PASS: ServerPre@123
+
 jobs:
   build:
     runs-on: windows-2022
+    timeout-minutes: 360
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Create user
-        shell: powershell
-        run: |
-          $User = "ServerPremium"
-          $Pass = "ServerPre@123"
-
-          net user $User $Pass /add
-          net localgroup administrators $User /add
-          net localgroup "Remote Desktop Users" $User /add
-
-      - name: Show credentials
-        shell: powershell
-        run: |
-          Write-Host ""
-          Write-Host "=========================================="
-          Write-Host "RDP Host : ${{ secrets.CF_HOSTNAME }}"
-          Write-Host "User     : ServerPremium"
-          Write-Host "Password : ServerPre@123"
-          Write-Host "=========================================="
-          Write-Host ""
-
-      - name: Install Applications
         shell: cmd
         run: |
-          choco feature enable -n allowGlobalConfirmation
-          choco install cloudflared intellijidea-community --no-progress
+          net user "%PREMIUM_USERNAME%" "%PREMIUM_PASS%" /add
+          net localgroup administrators "%PREMIUM_USERNAME%" /add
+          net localgroup "Remote Desktop Users" "%PREMIUM_USERNAME%" /add
 
-      - name: Start Cloudflare Tunnel
-        shell: powershell
-        run: cloudflared.exe service install ${{ secrets.CF_TOKEN }}
+      - name: Cloudflare Tunnel
+        shell: cmd
+        env:
+          CF_TOKEN: ${{ secrets.CF_TOKEN }}
+        run: |
+          call "%GITHUB_WORKSPACE%\cloudflared.bat"
+
+      - name: Register install script
+        shell: cmd
+        run: |
+          if not exist "C:\ProgramData\PremiumServer" (
+              mkdir "C:\ProgramData\PremiumServer"
+          )
+
+          copy /Y "%GITHUB_WORKSPACE%\install.bat" ^
+            "C:\ProgramData\PremiumServer\install.bat"
+
+          reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" ^
+            /v PremiumServerLogin ^
+            /t REG_SZ ^
+            /d "cmd.exe /c \"C:\ProgramData\PremiumServer\install.bat\"" ^
+            /f
+
+      - name: Show credentials
+        shell: cmd
+        run: |
+          echo.
+          echo ==========================================
+          echo RDP Host : ${{ secrets.CF_HOSTNAME }}
+          echo User     : %RDP_USER%
+          echo Password : %RDP_PASS%
+          echo ==========================================
+          echo.
 
       - name: Keep alive
-        shell: powershell
+        shell: cmd
         run: |
-          $seconds = 21500
-
-          for ($i = 0; $i -lt $seconds; $i += 10) {
-              Write-Host "Running... $i / $seconds seconds"
-              Start-Sleep -Seconds 10
-          }
+          call "%GITHUB_WORKSPACE%\sleep.bat"

@@ -1,0 +1,276 @@
+```bat
+@echo off
+setlocal EnableExtensions EnableDelayedExpansion
+
+title Premium Server - Application Installer
+
+REM ============================================================
+REM Configuration
+REM ============================================================
+
+set "TARGET_USER=ServerPremium"
+set "LOG_DIR=%ProgramData%\PremiumServer"
+set "LOG_FILE=%LOG_DIR%\login-install.log"
+
+REM ============================================================
+REM Only run for the intended RDP user
+REM ============================================================
+
+if /I not "%USERNAME%"=="%TARGET_USER%" (
+    exit /b 0
+)
+
+REM ============================================================
+REM Create log directory
+REM ============================================================
+
+if not exist "%LOG_DIR%" mkdir "%LOG_DIR%" >nul 2>&1
+
+echo. >> "%LOG_FILE%"
+echo ============================================================ >> "%LOG_FILE%"
+echo [%DATE% %TIME%] Login detected: %USERNAME% >> "%LOG_FILE%"
+echo ============================================================ >> "%LOG_FILE%"
+
+echo.
+echo ============================================================
+echo              PREMIUM SERVER
+echo ============================================================
+echo.
+echo User: %USERNAME%
+echo.
+echo Installing latest applications...
+echo.
+echo ============================================================
+echo.
+
+REM ============================================================
+REM Wait for Windows desktop / network
+REM ============================================================
+
+echo Waiting for Windows desktop...
+timeout /t 5 /nobreak >nul
+
+REM ============================================================
+REM Locate WinGet
+REM ============================================================
+
+echo Checking WinGet...
+
+where winget.exe >nul 2>&1
+
+if errorlevel 1 (
+    echo.
+    echo ERROR: WinGet is not available.
+    echo [%DATE% %TIME%] ERROR: winget.exe not found >> "%LOG_FILE%"
+    echo.
+    echo Please install/update Microsoft App Installer.
+    echo.
+    pause
+    exit /b 1
+)
+
+echo WinGet found.
+echo [%DATE% %TIME%] WinGet found >> "%LOG_FILE%"
+
+REM ============================================================
+REM Update WinGet sources
+REM ============================================================
+
+echo.
+echo Updating WinGet sources...
+
+winget source update >> "%LOG_FILE%" 2>&1
+
+REM ============================================================
+REM Install OpenCode Desktop
+REM ============================================================
+
+echo.
+echo ============================================================
+echo Installing OpenCode Desktop...
+echo ============================================================
+echo.
+
+winget install --id SST.OpenCodeDesktop -e ^
+    --source winget ^
+    --accept-source-agreements ^
+    --accept-package-agreements ^
+    --disable-interactivity ^
+    >> "%LOG_FILE%" 2>&1
+
+if errorlevel 1 (
+    echo WARNING: OpenCode installation returned an error.
+    echo [%DATE% %TIME%] OpenCode installation failed >> "%LOG_FILE%"
+) else (
+    echo OpenCode Desktop installed.
+    echo [%DATE% %TIME%] OpenCode installed >> "%LOG_FILE%"
+)
+
+REM ============================================================
+REM Install GitHub Desktop
+REM ============================================================
+
+echo.
+echo ============================================================
+echo Installing GitHub Desktop...
+echo ============================================================
+echo.
+
+winget install --id GitHub.GitHubDesktop -e ^
+    --source winget ^
+    --accept-source-agreements ^
+    --accept-package-agreements ^
+    --disable-interactivity ^
+    >> "%LOG_FILE%" 2>&1
+
+if errorlevel 1 (
+    echo WARNING: GitHub Desktop installation returned an error.
+    echo [%DATE% %TIME%] GitHub Desktop installation failed >> "%LOG_FILE%"
+) else (
+    echo GitHub Desktop installed.
+    echo [%DATE% %TIME%] GitHub Desktop installed >> "%LOG_FILE%"
+)
+
+REM ============================================================
+REM Install IntelliJ IDEA
+REM ============================================================
+
+echo.
+echo ============================================================
+echo Installing IntelliJ IDEA...
+echo ============================================================
+echo.
+
+winget install --id JetBrains.IntelliJIDEA -e ^
+    --source winget ^
+    --accept-source-agreements ^
+    --accept-package-agreements ^
+    --disable-interactivity ^
+    >> "%LOG_FILE%" 2>&1
+
+if errorlevel 1 (
+    echo WARNING: IntelliJ IDEA installation returned an error.
+    echo [%DATE% %TIME%] IntelliJ IDEA installation failed >> "%LOG_FILE%"
+) else (
+    echo IntelliJ IDEA installed.
+    echo [%DATE% %TIME%] IntelliJ IDEA installed >> "%LOG_FILE%"
+)
+
+REM ============================================================
+REM Refresh PATH
+REM ============================================================
+
+echo.
+echo Refreshing environment...
+
+set "PATH=%PATH%;%LOCALAPPDATA%\Microsoft\WinGet\Links"
+set "PATH=%PATH%;%ProgramFiles%\GitHub Desktop"
+set "PATH=%PATH%;%ProgramFiles%\OpenCode"
+
+REM ============================================================
+REM Start OpenCode Desktop
+REM ============================================================
+
+echo.
+echo ============================================================
+echo Starting OpenCode Desktop...
+echo ============================================================
+echo.
+
+set "OPENCODE_EXE="
+
+if exist "%ProgramFiles%\OpenCode\OpenCode.exe" (
+    set "OPENCODE_EXE=%ProgramFiles%\OpenCode\OpenCode.exe"
+)
+
+if not defined OPENCODE_EXE if exist "%LOCALAPPDATA%\Programs\OpenCode\OpenCode.exe" (
+    set "OPENCODE_EXE=%LOCALAPPDATA%\Programs\OpenCode\OpenCode.exe"
+)
+
+if defined OPENCODE_EXE (
+    echo Starting:
+    echo %OPENCODE_EXE%
+    start "" "%OPENCODE_EXE%"
+    echo [%DATE% %TIME%] OpenCode started >> "%LOG_FILE%"
+) else (
+    echo OpenCode executable not found.
+    echo [%DATE% %TIME%] OpenCode executable not found >> "%LOG_FILE%"
+)
+
+REM ============================================================
+REM Start GitHub Desktop
+REM ============================================================
+
+echo.
+echo ============================================================
+echo Starting GitHub Desktop...
+echo ============================================================
+echo.
+
+set "GITHUB_EXE="
+
+if exist "%ProgramFiles%\GitHub Desktop\GitHubDesktop.exe" (
+    set "GITHUB_EXE=%ProgramFiles%\GitHub Desktop\GitHubDesktop.exe"
+)
+
+if not defined GITHUB_EXE if exist "%LOCALAPPDATA%\GitHubDesktop\GitHubDesktop.exe" (
+    set "GITHUB_EXE=%LOCALAPPDATA%\GitHubDesktop\GitHubDesktop.exe"
+)
+
+if defined GITHUB_EXE (
+    echo Starting:
+    echo %GITHUB_EXE%
+    start "" "%GITHUB_EXE%"
+    echo [%DATE% %TIME%] GitHub Desktop started >> "%LOG_FILE%"
+) else (
+    echo GitHub Desktop executable not found.
+    echo [%DATE% %TIME%] GitHub Desktop executable not found >> "%LOG_FILE%"
+)
+
+REM ============================================================
+REM Start IntelliJ IDEA
+REM ============================================================
+
+echo.
+echo ============================================================
+echo Starting IntelliJ IDEA...
+echo ============================================================
+echo.
+
+set "IDEA_EXE="
+
+if exist "%ProgramFiles%\JetBrains\IntelliJ IDEA\bin\idea64.exe" (
+    set "IDEA_EXE=%ProgramFiles%\JetBrains\IntelliJ IDEA\bin\idea64.exe"
+)
+
+if not defined IDEA_EXE if exist "%LOCALAPPDATA%\Programs\IntelliJ IDEA\bin\idea64.exe" (
+    set "IDEA_EXE=%LOCALAPPDATA%\Programs\IntelliJ IDEA\bin\idea64.exe"
+)
+
+if defined IDEA_EXE (
+    echo Starting:
+    echo %IDEA_EXE%
+    start "" "%IDEA_EXE%"
+    echo [%DATE% %TIME%] IntelliJ IDEA started >> "%LOG_FILE%"
+) else (
+    echo IntelliJ IDEA executable not found.
+    echo [%DATE% %TIME%] IntelliJ IDEA executable not found >> "%LOG_FILE%"
+)
+
+REM ============================================================
+REM Finish
+REM ============================================================
+
+echo.
+echo ============================================================
+echo Installation/startup completed.
+echo ============================================================
+echo.
+echo Log:
+echo %LOG_FILE%
+echo.
+
+echo [%DATE% %TIME%] Login script completed >> "%LOG_FILE%"
+
+exit /b 0
+```
