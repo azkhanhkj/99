@@ -1,4 +1,3 @@
-```bat
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 
@@ -38,7 +37,7 @@ echo ============================================================
 echo.
 echo User: %USERNAME%
 echo.
-echo Installing latest applications...
+echo Installing applications using Chocolatey...
 echo.
 echo ============================================================
 echo.
@@ -51,35 +50,52 @@ echo Waiting for Windows desktop...
 timeout /t 5 /nobreak >nul
 
 REM ============================================================
-REM Locate WinGet
+REM Locate Chocolatey
 REM ============================================================
 
-echo Checking WinGet...
+echo Checking Chocolatey...
 
-where winget.exe >nul 2>&1
+set "CHOCO_EXE="
 
-if errorlevel 1 (
+if exist "%ProgramData%\chocolatey\bin\choco.exe" (
+    set "CHOCO_EXE=%ProgramData%\chocolatey\bin\choco.exe"
+)
+
+if not defined CHOCO_EXE (
+    where choco.exe >nul 2>&1
+
+    if not errorlevel 1 (
+        set "CHOCO_EXE=choco.exe"
+    )
+)
+
+if not defined CHOCO_EXE (
     echo.
-    echo ERROR: WinGet is not available.
-    echo [%DATE% %TIME%] ERROR: winget.exe not found >> "%LOG_FILE%"
+    echo ERROR: Chocolatey is not available.
+    echo [%DATE% %TIME%] ERROR: Chocolatey not found >> "%LOG_FILE%"
     echo.
-    echo Please install/update Microsoft App Installer.
+    echo Please install Chocolatey first.
     echo.
     pause
     exit /b 1
 )
 
-echo WinGet found.
-echo [%DATE% %TIME%] WinGet found >> "%LOG_FILE%"
+echo Chocolatey found:
+echo %CHOCO_EXE%
+
+echo [%DATE% %TIME%] Chocolatey found: %CHOCO_EXE% >> "%LOG_FILE%"
 
 REM ============================================================
-REM Update WinGet sources
+REM Refresh Chocolatey package information
 REM ============================================================
 
 echo.
-echo Updating WinGet sources...
+echo ============================================================
+echo Updating Chocolatey...
+echo ============================================================
+echo.
 
-winget source update >> "%LOG_FILE%" 2>&1
+"%CHOCO_EXE%" outdated --no-progress >> "%LOG_FILE%" 2>&1
 
 REM ============================================================
 REM Install OpenCode Desktop
@@ -91,12 +107,7 @@ echo Installing OpenCode Desktop...
 echo ============================================================
 echo.
 
-winget install --id SST.OpenCodeDesktop -e ^
-    --source winget ^
-    --accept-source-agreements ^
-    --accept-package-agreements ^
-    --disable-interactivity ^
-    >> "%LOG_FILE%" 2>&1
+"%CHOCO_EXE%" install opencode --yes --no-progress >> "%LOG_FILE%" 2>&1
 
 if errorlevel 1 (
     echo WARNING: OpenCode installation returned an error.
@@ -116,12 +127,7 @@ echo Installing GitHub Desktop...
 echo ============================================================
 echo.
 
-winget install --id GitHub.GitHubDesktop -e ^
-    --source winget ^
-    --accept-source-agreements ^
-    --accept-package-agreements ^
-    --disable-interactivity ^
-    >> "%LOG_FILE%" 2>&1
+"%CHOCO_EXE%" install github-desktop --yes --no-progress >> "%LOG_FILE%" 2>&1
 
 if errorlevel 1 (
     echo WARNING: GitHub Desktop installation returned an error.
@@ -132,27 +138,22 @@ if errorlevel 1 (
 )
 
 REM ============================================================
-REM Install IntelliJ IDEA
+REM Install IntelliJ IDEA Community
 REM ============================================================
 
 echo.
 echo ============================================================
-echo Installing IntelliJ IDEA...
+echo Installing IntelliJ IDEA Community...
 echo ============================================================
 echo.
 
-winget install --id JetBrains.IntelliJIDEA -e ^
-    --source winget ^
-    --accept-source-agreements ^
-    --accept-package-agreements ^
-    --disable-interactivity ^
-    >> "%LOG_FILE%" 2>&1
+"%CHOCO_EXE%" install intellijidea-community --yes --no-progress >> "%LOG_FILE%" 2>&1
 
 if errorlevel 1 (
     echo WARNING: IntelliJ IDEA installation returned an error.
     echo [%DATE% %TIME%] IntelliJ IDEA installation failed >> "%LOG_FILE%"
 ) else (
-    echo IntelliJ IDEA installed.
+    echo IntelliJ IDEA Community installed.
     echo [%DATE% %TIME%] IntelliJ IDEA installed >> "%LOG_FILE%"
 )
 
@@ -163,12 +164,10 @@ REM ============================================================
 echo.
 echo Refreshing environment...
 
-set "PATH=%PATH%;%LOCALAPPDATA%\Microsoft\WinGet\Links"
-set "PATH=%PATH%;%ProgramFiles%\GitHub Desktop"
-set "PATH=%PATH%;%ProgramFiles%\OpenCode"
+set "PATH=%PATH%;%ProgramData%\chocolatey\bin"
 
 REM ============================================================
-REM Start OpenCode Desktop
+REM Find OpenCode
 REM ============================================================
 
 echo.
@@ -179,7 +178,11 @@ echo.
 
 set "OPENCODE_EXE="
 
-if exist "%ProgramFiles%\OpenCode\OpenCode.exe" (
+for /f "delims=" %%A in ('where opencode.exe 2^>nul') do (
+    if not defined OPENCODE_EXE set "OPENCODE_EXE=%%A"
+)
+
+if not defined OPENCODE_EXE if exist "%ProgramFiles%\OpenCode\OpenCode.exe" (
     set "OPENCODE_EXE=%ProgramFiles%\OpenCode\OpenCode.exe"
 )
 
@@ -198,7 +201,7 @@ if defined OPENCODE_EXE (
 )
 
 REM ============================================================
-REM Start GitHub Desktop
+REM Find GitHub Desktop
 REM ============================================================
 
 echo.
@@ -217,6 +220,10 @@ if not defined GITHUB_EXE if exist "%LOCALAPPDATA%\GitHubDesktop\GitHubDesktop.e
     set "GITHUB_EXE=%LOCALAPPDATA%\GitHubDesktop\GitHubDesktop.exe"
 )
 
+if not defined GITHUB_EXE if exist "%ProgramFiles(x86)%\GitHub Desktop\GitHubDesktop.exe" (
+    set "GITHUB_EXE=%ProgramFiles(x86)%\GitHub Desktop\GitHubDesktop.exe"
+)
+
 if defined GITHUB_EXE (
     echo Starting:
     echo %GITHUB_EXE%
@@ -228,7 +235,7 @@ if defined GITHUB_EXE (
 )
 
 REM ============================================================
-REM Start IntelliJ IDEA
+REM Find IntelliJ IDEA
 REM ============================================================
 
 echo.
@@ -239,12 +246,24 @@ echo.
 
 set "IDEA_EXE="
 
-if exist "%ProgramFiles%\JetBrains\IntelliJ IDEA\bin\idea64.exe" (
-    set "IDEA_EXE=%ProgramFiles%\JetBrains\IntelliJ IDEA\bin\idea64.exe"
+for /d %%A in (
+    "%ProgramFiles%\JetBrains\IntelliJ IDEA*"
+    "%ProgramFiles%\JetBrains\IntelliJ IDEA Community Edition*"
+) do (
+    if exist "%%~A\bin\idea64.exe" (
+        if not defined IDEA_EXE set "IDEA_EXE=%%~A\bin\idea64.exe"
+    )
 )
 
-if not defined IDEA_EXE if exist "%LOCALAPPDATA%\Programs\IntelliJ IDEA\bin\idea64.exe" (
-    set "IDEA_EXE=%LOCALAPPDATA%\Programs\IntelliJ IDEA\bin\idea64.exe"
+if not defined IDEA_EXE (
+    for /d %%A in (
+        "%LOCALAPPDATA%\Programs\IntelliJ IDEA*"
+        "%LOCALAPPDATA%\Programs\IntelliJ IDEA Community Edition*"
+    ) do (
+        if exist "%%~A\bin\idea64.exe" (
+            if not defined IDEA_EXE set "IDEA_EXE=%%~A\bin\idea64.exe"
+        )
+    )
 )
 
 if defined IDEA_EXE (
@@ -273,4 +292,3 @@ echo.
 echo [%DATE% %TIME%] Login script completed >> "%LOG_FILE%"
 
 exit /b 0
-```
