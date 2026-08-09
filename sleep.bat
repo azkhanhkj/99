@@ -14,7 +14,8 @@ if %ELAPSED% GEQ %SECONDS% goto end
 
 echo Running... %ELAPSED% / %SECONDS% seconds
 
-timeout /t 10 /nobreak >nul
+REM 10 second sleep without timeout/stdin
+ping 127.0.0.1 -n 11 >nul
 
 set /a ELAPSED+=10
 
