@@ -128,7 +128,7 @@ echo Installing IntelliJ IDEA Community...
 echo ============================================================
 echo.
 
-"%CHOCO_EXE%" install intellijidea-community --yes
+"%CHOCO_EXE%" install intellijidea-community --version 2024.1.5 --yes
 
 if errorlevel 1 (
     echo WARNING: IntelliJ IDEA installation returned an error.
@@ -155,6 +155,27 @@ if errorlevel 1 (
 ) else (
     echo Ghidra installed.
     echo [%DATE% %TIME%] Ghidra installed
+)
+
+REM ============================================================
+REM Install Java
+REM ============================================================
+
+echo ==========================================
+echo Installing Java 25, Java 17 and Java 8
+echo ==========================================
+echo.
+
+:: Enable Chocolatey global confirmation
+choco feature enable -n allowGlobalConfirmation >nul 2>&1
+
+:: Install Java versions
+choco install temurin25 temurin17 temurin8
+
+if errorlevel 1 (
+    echo.
+    echo [ERROR] Failed to install one or more Java versions.
+    exit /b 1
 )
 
 REM ============================================================
@@ -275,6 +296,18 @@ if defined IDEA_EXE (
     echo IntelliJ IDEA executable not found.
     echo [%DATE% %TIME%] IntelliJ IDEA executable not found
 )
+
+echo.
+echo ==========================================
+echo Java versions installed
+echo ==========================================
+echo.
+
+java -version
+
+echo.
+echo Installed Java packages:
+choco list --local-only | findstr /I "temurin"
 
 REM ============================================================
 REM Finish
