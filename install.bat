@@ -23,12 +23,12 @@ REM ============================================================
 REM Create log directory
 REM ============================================================
 
-if not exist "%LOG_DIR%" mkdir "%LOG_DIR%" >nul 2>&1
+if not exist "%LOG_DIR%" mkdir "%LOG_DIR%" >nul
 
-echo. >> "%LOG_FILE%"
-echo ============================================================ >> "%LOG_FILE%"
-echo [%DATE% %TIME%] Login detected: %USERNAME% >> "%LOG_FILE%"
-echo ============================================================ >> "%LOG_FILE%"
+echo.
+echo ============================================================
+echo [%DATE% %TIME%] Login detected: %USERNAME%
+echo ============================================================
 
 echo.
 echo ============================================================
@@ -55,7 +55,7 @@ if exist "%ProgramData%\chocolatey\bin\choco.exe" (
 )
 
 if not defined CHOCO_EXE (
-    where choco.exe >nul 2>&1
+    where choco.exe >nul
 
     if not errorlevel 1 (
         set "CHOCO_EXE=choco.exe"
@@ -65,7 +65,7 @@ if not defined CHOCO_EXE (
 if not defined CHOCO_EXE (
     echo.
     echo ERROR: Chocolatey is not available.
-    echo [%DATE% %TIME%] ERROR: Chocolatey not found >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] ERROR: Chocolatey not found
     echo.
     echo Please install Chocolatey first.
     echo.
@@ -76,7 +76,7 @@ if not defined CHOCO_EXE (
 echo Chocolatey found:
 echo %CHOCO_EXE%
 
-echo [%DATE% %TIME%] Chocolatey found: %CHOCO_EXE% >> "%LOG_FILE%"
+echo [%DATE% %TIME%] Chocolatey found: %CHOCO_EXE%
 
 REM ============================================================
 REM Install OpenCode Desktop
@@ -88,14 +88,14 @@ echo Installing OpenCode Desktop...
 echo ============================================================
 echo.
 
-"%CHOCO_EXE%" install opencode --yes >> "%LOG_FILE%" 2>&1
+"%CHOCO_EXE%" install opencode --yes
 
 if errorlevel 1 (
     echo WARNING: OpenCode installation returned an error.
-    echo [%DATE% %TIME%] OpenCode installation failed >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] OpenCode installation failed
 ) else (
     echo OpenCode Desktop installed.
-    echo [%DATE% %TIME%] OpenCode installed >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] OpenCode installed
 )
 
 REM ============================================================
@@ -108,14 +108,14 @@ echo Installing GitHub Desktop...
 echo ============================================================
 echo.
 
-"%CHOCO_EXE%" install github-desktop --yes >> "%LOG_FILE%" 2>&1
+"%CHOCO_EXE%" install github-desktop --yes
 
 if errorlevel 1 (
     echo WARNING: GitHub Desktop installation returned an error.
-    echo [%DATE% %TIME%] GitHub Desktop installation failed >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] GitHub Desktop installation failed
 ) else (
     echo GitHub Desktop installed.
-    echo [%DATE% %TIME%] GitHub Desktop installed >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] GitHub Desktop installed
 )
 
 REM ============================================================
@@ -128,14 +128,14 @@ echo Installing IntelliJ IDEA Community...
 echo ============================================================
 echo.
 
-"%CHOCO_EXE%" install intellijidea-community --yes >> "%LOG_FILE%" 2>&1
+"%CHOCO_EXE%" install intellijidea-community --yes
 
 if errorlevel 1 (
     echo WARNING: IntelliJ IDEA installation returned an error.
-    echo [%DATE% %TIME%] IntelliJ IDEA installation failed >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] IntelliJ IDEA installation failed
 ) else (
     echo IntelliJ IDEA Community installed.
-    echo [%DATE% %TIME%] IntelliJ IDEA installed >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] IntelliJ IDEA installed
 )
 
 REM ============================================================
@@ -175,10 +175,10 @@ if defined OPENCODE_EXE (
     echo Starting:
     echo %OPENCODE_EXE%
     start "" "%OPENCODE_EXE%"
-    echo [%DATE% %TIME%] OpenCode started >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] OpenCode started
 ) else (
     echo OpenCode executable not found.
-    echo [%DATE% %TIME%] OpenCode executable not found >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] OpenCode executable not found
 )
 
 REM ============================================================
@@ -209,10 +209,10 @@ if defined GITHUB_EXE (
     echo Starting:
     echo %GITHUB_EXE%
     start "" "%GITHUB_EXE%"
-    echo [%DATE% %TIME%] GitHub Desktop started >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] GitHub Desktop started
 ) else (
     echo GitHub Desktop executable not found.
-    echo [%DATE% %TIME%] GitHub Desktop executable not found >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] GitHub Desktop executable not found
 )
 
 REM ============================================================
@@ -251,10 +251,10 @@ if defined IDEA_EXE (
     echo Starting:
     echo %IDEA_EXE%
     start "" "%IDEA_EXE%"
-    echo [%DATE% %TIME%] IntelliJ IDEA started >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] IntelliJ IDEA started
 ) else (
     echo IntelliJ IDEA executable not found.
-    echo [%DATE% %TIME%] IntelliJ IDEA executable not found >> "%LOG_FILE%"
+    echo [%DATE% %TIME%] IntelliJ IDEA executable not found
 )
 
 REM ============================================================
@@ -270,6 +270,6 @@ echo Log:
 echo %LOG_FILE%
 echo.
 
-echo [%DATE% %TIME%] Login script completed >> "%LOG_FILE%"
+echo [%DATE% %TIME%] Login script completed
 
 exit /b 0
