@@ -88,7 +88,7 @@ echo Installing OpenCode Desktop...
 echo ============================================================
 echo.
 
-"%CHOCO_EXE%" install opencode --yes
+"%CHOCO_EXE%" install opencode-desktop --yes
 
 if errorlevel 1 (
     echo WARNING: OpenCode installation returned an error.
@@ -136,6 +136,25 @@ if errorlevel 1 (
 ) else (
     echo IntelliJ IDEA Community installed.
     echo [%DATE% %TIME%] IntelliJ IDEA installed
+)
+
+REM ============================================================
+REM Install Ghidra
+REM ============================================================
+
+echo.
+echo ============================================================
+echo Installing Ghidra...
+echo ============================================================
+echo.
+
+"%CHOCO_EXE%" install ghidra --yes
+if errorlevel 1 (
+    echo WARNING: Ghidra installation returned an error.
+    echo [%DATE% %TIME%] Ghidra installation failed
+) else (
+    echo Ghidra installed.
+    echo [%DATE% %TIME%] Ghidra installed
 )
 
 REM ============================================================
