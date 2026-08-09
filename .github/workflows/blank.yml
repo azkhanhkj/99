@@ -30,7 +30,7 @@ jobs:
         run: |
           call "%GITHUB_WORKSPACE%\cloudflared.bat"
 
-      - name: Register install script
+      - name: Register admin install script
         shell: cmd
         run: |
           if not exist "C:\ProgramData\PremiumServer" (
@@ -40,11 +40,23 @@ jobs:
           copy /Y "%GITHUB_WORKSPACE%\install.bat" ^
             "C:\ProgramData\PremiumServer\install.bat"
 
-          reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Run" ^
-            /v PremiumServerLogin ^
-            /t REG_SZ ^
-            /d "cmd.exe /c \"C:\ProgramData\PremiumServer\install.bat\"" ^
+          schtasks /delete ^
+            /tn "PremiumServer Login Installer" ^
+            /f >nul 2>&1
+
+          schtasks /create ^
+            /tn "PremiumServer Login Installer" ^
+            /tr "cmd.exe /c C:\ProgramData\PremiumServer\install.bat" ^
+            /sc onlogon ^
+            /ru "%PREMIUM_USERNAME%" ^
+            /rp "%PREMIUM_PASS%" ^
+            /rl highest ^
             /f
+
+          echo.
+          echo ==========================================
+          echo Admin login task registered successfully.
+          echo ==========================================
 
       - name: Show credentials
         shell: cmd
