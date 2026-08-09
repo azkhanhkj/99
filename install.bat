@@ -162,7 +162,7 @@ REM Install Java
 REM ============================================================
 
 echo ==========================================
-echo Installing Java 25, Java 17 and Java 8
+echo Installing Java 17 and Java 8
 echo ==========================================
 echo.
 
@@ -170,7 +170,7 @@ echo.
 choco feature enable -n allowGlobalConfirmation >nul 2>&1
 
 :: Install Java versions
-choco install temurin25 temurin17 temurin8
+choco install temurin17 temurin8
 
 if errorlevel 1 (
     echo.

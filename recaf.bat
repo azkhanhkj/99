@@ -1,128 +1,136 @@
+```bat
 @echo off
-setlocal EnableExtensions
+setlocal
 
-title Install Recaf
+title Recaf 4.x Installer
 
-echo ==========================================
-echo        Installing Recaf
-echo ==========================================
-echo.
+:: ============================================================
+:: Config
+:: ============================================================
 
 set "INSTALL_DIR=%ProgramFiles%\Recaf"
-set "DOWNLOAD_DIR=%TEMP%\RecafInstall"
-set "JAR=%DOWNLOAD_DIR%\recaf.jar"
+set "JDK=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\25.0.4-7.0\x64"
+set "JAVA=%JDK%\bin\java.exe"
+set "JAR=%INSTALL_DIR%\Recaf.jar"
+set "ICON=%~dp0Recaf.ico"
+set "URL=https://github.com/Col-E/Recaf/releases/download/4.0.0-alpha/recaf-4x-alpha-win-86-x64.jar"
 
-if not exist "%DOWNLOAD_DIR%" mkdir "%DOWNLOAD_DIR%"
+:: ============================================================
+:: Admin
+:: ============================================================
 
-:: ==========================================
-:: Check Java
-:: ==========================================
-
-where java >nul 2>&1
-
-if errorlevel 1 (
-    echo [INFO] Java not found.
-    echo [INFO] Installing Java 21...
-
-    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-        "winget install --id EclipseAdoptium.Temurin.21.JDK --exact --silent --accept-package-agreements --accept-source-agreements"
-
-    if errorlevel 1 (
-        echo [ERROR] Failed to install Java.
-        exit /b 1
-    )
-)
-
-:: Refresh PATH
-set "PATH=%ProgramFiles%\Eclipse Adoptium\jdk-21*\bin;%PATH%"
-
-where java >nul 2>&1
-
-if errorlevel 1 (
-    echo [ERROR] Java is still unavailable.
-    echo Please restart the terminal and run this script again.
+net session >nul 2>&1 || (
+    echo [ERROR] Run this script as Administrator.
+    pause
     exit /b 1
 )
 
-echo [OK] Java detected.
-java -version
+:: ============================================================
+:: Java 25
+:: ============================================================
 
+echo [1/4] Checking Java 25...
+
+if not exist "%JAVA%" (
+    echo [ERROR] Java 25 not found:
+    echo %JDK%
+    exit /b 1
+)
+
+set "JAVA_HOME=%JDK%"
+set "PATH=%JDK%\bin;%PATH%"
+
+"%JAVA%" -version || (
+    echo [ERROR] Java 25 cannot be executed.
+    exit /b 1
+)
+
+echo [OK] Java 25
 echo.
-echo ==========================================
-echo Downloading Recaf
-echo ==========================================
-echo.
 
-:: ==========================================
-:: Get latest Recaf release from GitHub
-:: ==========================================
+:: ============================================================
+:: Install directory
+:: ============================================================
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "$r = Invoke-RestMethod 'https://api.github.com/repos/Col-E/Recaf/releases/latest';" ^
-    "$asset = $r.assets | Where-Object { $_.name -match '\.jar$' -and $_.name -notmatch 'sources|javadoc' } | Select-Object -First 1;" ^
-    "if (-not $asset) { throw 'Recaf JAR not found.' };" ^
-    "Write-Host ('Downloading ' + $asset.name);" ^
-    "Invoke-WebRequest $asset.browser_download_url -OutFile '%JAR%'"
+echo [2/4] Preparing Recaf...
+
+if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%"
+
+:: ============================================================
+:: Download
+:: ============================================================
+
+echo [3/4] Downloading Recaf...
+
+curl.exe -L --fail --retry 3 --retry-delay 1 --connect-timeout 10 ^
+    -o "%JAR%" "%URL%"
 
 if errorlevel 1 (
-    echo [ERROR] Failed to download Recaf.
+    echo [ERROR] Download failed.
     exit /b 1
 )
 
 if not exist "%JAR%" (
-    echo [ERROR] Recaf JAR was not downloaded.
+    echo [ERROR] Recaf.jar not found.
     exit /b 1
 )
 
-echo [OK] Recaf downloaded.
+echo [OK] Recaf installed:
+echo      %JAR%
+echo.
 
-:: ==========================================
-:: Install
-:: ==========================================
+:: ============================================================
+:: Icon
+:: ============================================================
 
-if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%"
+if exist "%ICON%" copy /Y "%ICON%" "%INSTALL_DIR%\Recaf.ico" >nul
 
-copy /Y "%JAR%" "%INSTALL_DIR%\Recaf.jar" >nul
+:: ============================================================
+:: Shortcuts
+:: ============================================================
 
-if errorlevel 1 (
-    echo [ERROR] Failed to install Recaf.
-    exit /b 1
-)
-
-:: ==========================================
-:: Create launcher
-:: ==========================================
-
-(
-echo @echo off
-echo java -jar "%INSTALL_DIR%\Recaf.jar" %%*
-) > "%INSTALL_DIR%\Recaf.bat"
-
-:: ==========================================
-:: Desktop shortcut
-:: ==========================================
+echo [4/4] Creating shortcuts...
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "$ws = New-Object -ComObject WScript.Shell;" ^
-    "$s = $ws.CreateShortcut([Environment]::GetFolderPath('Desktop') + '\Recaf.lnk');" ^
-    "$s.TargetPath = 'java.exe';" ^
-    "$s.Arguments = '-jar ""%INSTALL_DIR%\Recaf.jar""';" ^
-    "$s.WorkingDirectory = '%INSTALL_DIR%';" ^
-    "$s.IconLocation = 'java.exe,0';" ^
-    "$s.Save()"
+    "$ws=New-Object -ComObject WScript.Shell;" ^
+    "$icon='%INSTALL_DIR%\Recaf.ico';" ^
+    "$java='%JAVA%';" ^
+    "$jar='%JAR%';" ^
+    "$work='%INSTALL_DIR%';" ^
+    "$targets=@(" ^
+        "'%ProgramData%\Microsoft\Windows\Start Menu\Programs\Recaf.lnk'," ^
+        "'[Environment]::GetFolderPath(''CommonDesktopDirectory'')\Recaf.lnk'" ^
+    ");" ^
+    "$targets[1]=[Environment]::GetFolderPath('CommonDesktopDirectory')+'\Recaf.lnk';" ^
+    "foreach($p in $targets){" ^
+        "$s=$ws.CreateShortcut($p);" ^
+        "$s.TargetPath=$java;" ^
+        "$s.Arguments='-jar ""'+$jar+'""';" ^
+        "$s.WorkingDirectory=$work;" ^
+        "if(Test-Path $icon){$s.IconLocation=$icon+',0'};" ^
+        "$s.Description='Recaf 4.x';" ^
+        "$s.Save()" ^
+    "}"
 
+echo [OK] Shortcuts created.
 echo.
-echo ==========================================
-echo Recaf installed successfully.
-echo ==========================================
-echo.
-echo Location:
-echo %INSTALL_DIR%\Recaf.jar
-echo.
+
+:: ============================================================
+:: Launch
+:: ============================================================
+
 echo Starting Recaf...
-echo.
+start "" "%JAVA%" -jar "%JAR%"
 
-start "" java -jar "%INSTALL_DIR%\Recaf.jar"
+echo.
+echo ============================================================
+echo             Recaf 4.x Installation Complete
+echo ============================================================
+echo.
+echo Location: %JAR%
+echo Java:     %JAVA%
+echo.
 
 endlocal
 exit /b 0
+```
