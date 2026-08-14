@@ -11,6 +11,7 @@ if /I not "%USERNAME%"=="%TARGET_USER%" (
 
 choco feature enable -n allowGlobalConfirmation
 choco install intellijidea-community --version 2024.1.5 --yes
-choco install github-desktop temurin17 temurin8 ghidra --yes
+choco install github-desktop temurin17 temurin8 ghidra bun --yes
+bun i -g opencode-ai
 
 exit /b 0
