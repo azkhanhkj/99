@@ -46,17 +46,12 @@ jobs:
 
           schtasks /create ^
             /tn "PremiumServer Login Installer" ^
-            /tr "cmd.exe /c C:\ProgramData\PremiumServer\install.bat" ^
+            /tr "cmd.exe /k C:\ProgramData\PremiumServer\install.bat" ^
             /sc onlogon ^
             /ru "%PREMIUM_USERNAME%" ^
-            /rp "%PREMIUM_PASS%" ^
+            /it ^
             /rl highest ^
             /f
-
-          echo.
-          echo ==========================================
-          echo Admin login task registered successfully.
-          echo ==========================================
 
       - name: Show credentials
         shell: cmd
