@@ -34,24 +34,14 @@ jobs:
         shell: cmd
         run: |
           if not exist "C:\ProgramData\PremiumServer" (
-              mkdir "C:\ProgramData\PremiumServer"
+            mkdir "C:\ProgramData\PremiumServer"
           )
 
-          copy /Y "%GITHUB_WORKSPACE%\install.bat" ^
-            "C:\ProgramData\PremiumServer\install.bat"
-
-          schtasks /delete ^
-            /tn "PremiumServer Login Installer" ^
-            /f >nul 2>&1
-
-          schtasks /create ^
-            /tn "PremiumServer Login Installer" ^
-            /tr "cmd.exe /k C:\ProgramData\PremiumServer\install.bat" ^
-            /sc onlogon ^
-            /ru "%PREMIUM_USERNAME%" ^
-            /it ^
-            /rl highest ^
-            /f
+          copy /Y "%GITHUB_WORKSPACE%\install.bat" "C:\ProgramData\PremiumServer\install.bat"
+          copy /Y "%GITHUB_WORKSPACE%\uninstall.bat" "C:\ProgramData\PremiumServer\uninstall.bat"
+          copy /Y "%GITHUB_WORKSPACE%\recaf.bat" "C:\ProgramData\PremiumServer\recaf.bat"
+          schtasks /delete /tn "Installer" /f >nul 2>&1
+          schtasks /create /tn "Installer" /tr "cmd.exe /k C:\ProgramData\PremiumServer\install.bat" /sc onlogon /ru "%PREMIUM_USERNAME%" /it /rl highest /f
 
       - name: Show credentials
         shell: cmd
