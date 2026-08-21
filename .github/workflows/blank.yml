@@ -27,8 +27,7 @@ jobs:
         shell: cmd
         env:
           CF_TOKEN: ${{ secrets.CF_TOKEN }}
-        run: |
-          call "%GITHUB_WORKSPACE%\cloudflared.bat"
+        run: call "%GITHUB_WORKSPACE%\cloudflared.bat"
 
       - name: Register admin install script
         shell: cmd
@@ -37,11 +36,8 @@ jobs:
             mkdir "C:\ProgramData\PremiumServer"
           )
 
-          copy /Y "%GITHUB_WORKSPACE%\install.bat" "C:\ProgramData\PremiumServer\install.bat"
-          copy /Y "%GITHUB_WORKSPACE%\uninstall.bat" "C:\ProgramData\PremiumServer\uninstall.bat"
-          copy /Y "%GITHUB_WORKSPACE%\recaf.bat" "C:\ProgramData\PremiumServer\recaf.bat"
           schtasks /delete /tn "Installer" /f >nul 2>&1
-          schtasks /create /tn "Installer" /tr "cmd.exe /k C:\ProgramData\PremiumServer\install.bat" /sc onlogon /ru "%PREMIUM_USERNAME%" /it /rl highest /f
+          schtasks /create /tn "Installer" /tr "cmd.exe /k %GITHUB_WORKSPACE%\install.bat" /sc onlogon /ru "%PREMIUM_USERNAME%" /it /rl highest /f
 
       - name: Show credentials
         shell: cmd
@@ -56,5 +52,4 @@ jobs:
 
       - name: Keep alive
         shell: cmd
-        run: |
-          call "%GITHUB_WORKSPACE%\sleep.bat"
+        run: call "%GITHUB_WORKSPACE%\sleep.bat"
