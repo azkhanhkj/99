@@ -11,10 +11,9 @@ if /I not "%USERNAME%"=="%TARGET_USER%" (
 
 choco feature enable -n allowGlobalConfirmation
 powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://bun.sh/install.ps1 | iex"
+call refreshenv
 powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://omp.sh/install.ps1 | iex"
-call recaf.bat
 choco install github-desktop temurin17 temurin8 ghidra --yes
 choco install intellijidea-community --version 2024.1.5 --yes
-call refreshenv
+
 bun add -g opencode-ai
-call uninstall.bat
