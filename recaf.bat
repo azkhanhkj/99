@@ -8,7 +8,7 @@ title Recaf 4.x Installer
 :: ============================================================
 
 set "INSTALL_DIR=%ProgramFiles%\Recaf"
-set "JDK=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\25.0.4-7.0\x64"
+set "JDK=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\25.0.4-101.0\x64"
 set "JAVA=%JDK%\bin\java.exe"
 set "JAVAW=%JDK%\bin\javaw.exe"
 set "JAR=%INSTALL_DIR%\Recaf.jar"
