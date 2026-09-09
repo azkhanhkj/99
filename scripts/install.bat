@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 
-title Premium Server - Application & Environment Setup
+title Premium Server - Application and Environment Setup
 
 set "TARGET_USER=ServerPremium"
 
