@@ -19,7 +19,7 @@ d:\99\
     ├── recaf.bat                # Script tải và cấu hình Recaf 4.x
     ├── setup-performance.ps1    # Tối ưu Windows Defender exclusions & Graphics
     ├── setup-profile.ps1        # Cấu hình PowerShell profile với hàm set-java
-    ├── setup-shortcuts.ps1      # Tự động tạo Desktop shortcuts cho các công cụ dev
+    ├── setup-shortcuts.ps1      # Tạo Desktop shortcut cho Ghidra
     ├── sleep.bat                # Duy trì runner hoạt động
     └── uninstall.bat            # Gỡ bỏ các phần mềm mặc định không cần thiết
 ```

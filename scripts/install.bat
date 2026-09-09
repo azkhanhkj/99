@@ -45,7 +45,7 @@ if exist "%~dp0setup-profile.ps1" (
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup-profile.ps1" -TargetUser "%TARGET_USER%"
 )
 
-echo [7/7] Generating desktop shortcuts...
+echo [7/7] Generating Ghidra shortcut...
 if exist "%~dp0setup-shortcuts.ps1" (
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup-shortcuts.ps1" -TargetUser "%TARGET_USER%"
 )
