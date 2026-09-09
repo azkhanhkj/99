@@ -16,11 +16,11 @@ d:\99\
 └── scripts/                     # Toàn bộ script cài đặt và tối ưu hóa
     ├── cloudflared.bat          # Cài đặt và cấu hình Cloudflare Tunnel service
     ├── install.bat              # Script cài đặt chính (gọi qua Scheduled Task onlogon)
+    ├── paseo.bat                # Script tải và cài đặt Paseo Desktop & CLI
     ├── recaf.bat                # Script tải và cấu hình Recaf 4.x
     ├── set-java.bat             # Chuyển đổi nhanh các phiên bản OpenJDK (8, 11, 17, 21, 25)
     ├── setup-performance.bat    # Tối ưu Windows Defender exclusions & Graphics
     ├── setup-profile.bat        # Cấu hình terminal profile và triển khai lệnh set-java
-    ├── setup-shortcuts.bat      # Tạo Desktop shortcut cho Ghidra
     ├── sleep.bat                # Duy trì runner hoạt động
     └── uninstall.bat            # Gỡ bỏ các phần mềm mặc định không cần thiết
 ```
@@ -29,7 +29,7 @@ d:\99\
 
 1. **Khởi Động Siêu Tốc & Cài Đặt Tự Động**:
    - Pipeline GitHub Actions sẵn sàng kết nối chỉ trong 15-30 giây (tạo user, đăng ký Scheduled Task, mở Cloudflare Tunnel).
-   - Khi đăng nhập vào `ServerPremium`, Scheduled Task kích hoạt `scripts/install.bat` để cài đặt đầy đủ các ứng dụng người dùng (`antigravity-ide`, `bun`, `opencode`, `pi`, `intellijidea-community 2024.3`, `ghidra`, `recaf`, v.v.).
+   - Khi đăng nhập vào `ServerPremium`, Scheduled Task kích hoạt `scripts/install.bat` để cài đặt đầy đủ các ứng dụng người dùng (`antigravity-ide`, `bun`, `opencode`, `pi`, `paseo` (Desktop & CLI), `unikey`, `intellijidea-community 2024.3`, `ghidra`, `recaf`, v.v.).
 
 2. **Chuyển Đổi Nhanh Phiên Bản Java (`set-java`)**:
    - Tận dụng kho JDK có sẵn của runner (`C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk`).

@@ -47,24 +47,24 @@ if errorlevel 1 (
 echo [4/8] Installing applications via Chocolatey...
 choco feature enable -n allowGlobalConfirmation >nul 2>&1
 choco install intellijidea-community --version 2024.3.5 --allow-downgrade --yes --no-progress
-choco install github-desktop antigravity-ide antigravity-cli vscode ghidra --yes --no-progress
+choco install github-desktop antigravity-ide antigravity-cli vscode ghidra unikey --yes --no-progress
 
 where agy >nul 2>&1 && call agy plugin install https://github.com/obra/superpowers
 where pi >nul 2>&1 && call pi install git:github.com/obra/superpowers
 
-echo [5/8] Installing Recaf 4.x...
+echo [5/8] Installing Paseo Desktop and CLI...
+if exist "%~dp0paseo.bat" (
+    call "%~dp0paseo.bat" "%TARGET_USER%"
+)
+
+echo [6/8] Installing Recaf 4.x...
 if exist "%~dp0recaf.bat" (
     call "%~dp0recaf.bat" "%TARGET_USER%"
 )
 
-echo [6/8] Configuring terminal profile and set-java command...
+echo [7/8] Configuring terminal profile and set-java command...
 if exist "%~dp0setup-profile.bat" (
     call "%~dp0setup-profile.bat" "%TARGET_USER%"
-)
-
-echo [7/8] Generating Ghidra shortcut...
-if exist "%~dp0setup-shortcuts.bat" (
-    call "%~dp0setup-shortcuts.bat" "%TARGET_USER%"
 )
 
 echo [8/8] Uninstalling bloatware and stopping unused services...
