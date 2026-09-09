@@ -1,7 +1,6 @@
-# setup-shortcuts.ps1 - Tạo Desktop & Start Menu shortcuts cho các công cụ dev
 param([string]$TargetUser = "ServerPremium")
 
-Write-Host "=== Tao Shortcuts tren Desktop cho $TargetUser ===" -ForegroundColor Cyan
+Write-Host "Creating desktop shortcuts for $TargetUser..." -ForegroundColor Cyan
 
 $ws = New-Object -ComObject WScript.Shell
 $desktopPaths = @(
@@ -15,17 +14,15 @@ function Save-ShortcutSafely($shortcut) {
     } catch {}
 }
 
-# 1. Cấu hình GHIDRA_JAVA_HOME sang Java 21 (Ghidra 12 yêu cầu Java >= 21)
 $jdk21 = "C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64"
 if (Test-Path $jdk21) {
     [Environment]::SetEnvironmentVariable("GHIDRA_JAVA_HOME", $jdk21, "User")
     try {
         [Environment]::SetEnvironmentVariable("GHIDRA_JAVA_HOME", $jdk21, "Machine")
     } catch {}
-    Write-Host "Da thiet lap GHIDRA_JAVA_HOME -> Java 21" -ForegroundColor Green
+    Write-Host "GHIDRA_JAVA_HOME configured -> Java 21" -ForegroundColor Green
 }
 
-# 2. Ghidra Shortcut
 $ghidraDirs = Get-ChildItem "C:\ProgramData\chocolatey\lib\ghidra\tools" -Filter "ghidra_*" -Directory -ErrorAction SilentlyContinue
 if ($ghidraDirs) {
     $ghidraRoot = $ghidraDirs[0].FullName
@@ -44,7 +41,6 @@ if ($ghidraDirs) {
     }
 }
 
-# 3. Recaf 4.x Shortcut
 $recafJar = "C:\Program Files\Recaf\Recaf.jar"
 $recafIcon = "C:\Program Files\Recaf\Recaf.ico"
 $jdk25Javaw = "C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\25.0.4-101.0\x64\bin\javaw.exe"
@@ -61,7 +57,6 @@ if (Test-Path $recafJar) {
     Write-Host "Created Recaf shortcut" -ForegroundColor Green
 }
 
-# 4. IntelliJ IDEA Shortcut
 $ideaExe = (Get-ChildItem "C:\Program Files\JetBrains" -Filter "idea64.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
 if ($ideaExe -and (Test-Path $ideaExe)) {
     foreach ($dp in $desktopPaths) {
@@ -74,7 +69,6 @@ if ($ideaExe -and (Test-Path $ideaExe)) {
     Write-Host "Created IntelliJ IDEA shortcut" -ForegroundColor Green
 }
 
-# 5. VS Code Shortcut
 $codeExe = "C:\Program Files\Microsoft VS Code\Code.exe"
 if (Test-Path $codeExe) {
     foreach ($dp in $desktopPaths) {
@@ -86,7 +80,6 @@ if (Test-Path $codeExe) {
     Write-Host "Created Visual Studio Code shortcut" -ForegroundColor Green
 }
 
-# 6. Antigravity IDE Shortcut
 $antigravityPaths = @(
     "C:\Users\$TargetUser\AppData\Local\Programs\Antigravity IDE\Antigravity IDE.exe",
     "$env:LOCALAPPDATA\Programs\Antigravity IDE\Antigravity IDE.exe"
@@ -106,7 +99,6 @@ if ($antigravityExe -and (Test-Path $antigravityExe)) {
     Write-Host "Created Antigravity IDE shortcut" -ForegroundColor Green
 }
 
-# 7. GitHub Desktop Shortcut
 $gitHubDesktopPaths = @(
     "C:\Users\$TargetUser\AppData\Local\GitHubDesktop\GitHubDesktop.exe",
     "$env:LOCALAPPDATA\GitHubDesktop\GitHubDesktop.exe"
@@ -123,4 +115,4 @@ if ($gitHubDesktopExe -and (Test-Path $gitHubDesktopExe)) {
     Write-Host "Created GitHub Desktop shortcut" -ForegroundColor Green
 }
 
-Write-Host "=== Hoan tat tao Shortcuts ===" -ForegroundColor Green
+Write-Host "Desktop shortcuts generated successfully." -ForegroundColor Green

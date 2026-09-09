@@ -3,45 +3,28 @@ setlocal
 
 title Recaf 4.x Installer
 
-:: ============================================================
-:: Config
-:: ============================================================
-
 set "INSTALL_DIR=%ProgramFiles%\Recaf"
 set "JDK=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\25.0.4-101.0\x64"
 set "JAVA=%JDK%\bin\java.exe"
 set "JAVAW=%JDK%\bin\javaw.exe"
 set "JAR=%INSTALL_DIR%\Recaf.jar"
-
-:: Icon nằm trong thư mục assets
 set "SOURCE_ICON=%~dp0..\assets\recaf.ico"
 if not exist "%SOURCE_ICON%" set "SOURCE_ICON=%~dp0..\assets\76870919.ico"
 set "ICON=%INSTALL_DIR%\Recaf.ico"
-
 set "URL=https://github.com/Col-E/Recaf/releases/download/4.0.0-alpha/recaf-4x-alpha-win-86-x64.jar"
-
-:: ============================================================
-:: Admin
-:: ============================================================
 
 net session >nul 2>&1 || (
     echo [ERROR] Run this script as Administrator.
     exit /b 1
 )
 
-:: ============================================================
-:: Java 25
-:: ============================================================
-
 if not exist "%JAVA%" (
-    echo [ERROR] Java executable not found:
-    echo %JAVA%
+    echo [ERROR] Java executable not found: %JAVA%
     exit /b 1
 )
 
 if not exist "%JAVAW%" (
-    echo [ERROR] javaw.exe not found:
-    echo %JAVAW%
+    echo [ERROR] javaw.exe not found: %JAVAW%
     exit /b 1
 )
 
@@ -49,32 +32,18 @@ set "JAVA_HOME=%JDK%"
 set "PATH=%JDK%\bin;%PATH%"
 
 "%JAVA%" -version >nul 2>&1
-
 if errorlevel 1 (
-    echo [ERROR] Java 25 is not working.
+    echo [ERROR] Java 25 verification failed.
     exit /b 1
 )
 
-:: ============================================================
-:: Install directory
-:: ============================================================
-
+if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%" >nul 2>&1
 if not exist "%INSTALL_DIR%" (
-    mkdir "%INSTALL_DIR%" >nul 2>&1
-)
-
-if not exist "%INSTALL_DIR%" (
-    echo [ERROR] Cannot create:
-    echo %INSTALL_DIR%
+    echo [ERROR] Cannot create install directory: %INSTALL_DIR%
     exit /b 1
 )
 
-:: ============================================================
-:: Download Recaf
-:: ============================================================
-
-echo [INFO] Downloading Recaf...
-
+echo Downloading Recaf 4.x...
 curl.exe -L --fail --silent --show-error ^
     --retry 3 ^
     --retry-delay 1 ^
@@ -87,40 +56,13 @@ if errorlevel 1 (
 )
 
 if not exist "%JAR%" (
-    echo [ERROR] Recaf.jar was not downloaded.
+    echo [ERROR] Recaf.jar not found after download.
     exit /b 1
 )
 
-:: ============================================================
-:: Install Icon
-:: ============================================================
-
-if not exist "%SOURCE_ICON%" (
-    echo [ERROR] Icon not found:
-    echo %SOURCE_ICON%
-    exit /b 1
+if exist "%SOURCE_ICON%" (
+    copy /Y "%SOURCE_ICON%" "%ICON%" >nul 2>&1
 )
-
-echo [INFO] Installing icon...
-
-copy /Y "%SOURCE_ICON%" "%ICON%" >nul 2>&1
-
-if errorlevel 1 (
-    echo [ERROR] Failed to copy icon.
-    exit /b 1
-)
-
-if not exist "%ICON%" (
-    echo [ERROR] Installed icon was not found:
-    echo %ICON%
-    exit /b 1
-)
-
-:: ============================================================
-:: Create Shortcuts
-:: ============================================================
-
-echo [INFO] Creating shortcuts...
 
 powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command ^
     "$ws = New-Object -ComObject WScript.Shell;" ^
@@ -132,36 +74,18 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command ^
     "$desktop = Join-Path ([Environment]::GetFolderPath('CommonDesktopDirectory')) 'Recaf.lnk';" ^
     "$targets = @($startMenu, $desktop);" ^
     "foreach ($path in $targets) {" ^
-        "$s = $ws.CreateShortcut($path);" ^
-        "$s.TargetPath = $java;" ^
-        "$s.Arguments = '-jar ""' + $jar + '""';" ^
-        "$s.WorkingDirectory = $work;" ^
-        "$s.IconLocation = $icon + ',0';" ^
-        "$s.Description = 'Recaf 4.x';" ^
-        "$s.Save();" ^
+        "try {" ^
+            "$s = $ws.CreateShortcut($path);" ^
+            "$s.TargetPath = $java;" ^
+            "$s.Arguments = '-jar ""' + $jar + '""';" ^
+            "$s.WorkingDirectory = $work;" ^
+            "if (Test-Path $icon) { $s.IconLocation = $icon + ',0'; }" ^
+            "$s.Description = 'Recaf 4.x';" ^
+            "$s.Save();" ^
+        "} catch {}" ^
     "}" >nul 2>&1
 
-:: ============================================================
-:: Done
-:: ============================================================
-
-echo.
-echo ============================================================
 echo Recaf 4.x installed successfully.
-echo ============================================================
-echo.
-echo Install directory:
-echo %INSTALL_DIR%
-echo.
-echo Shortcut icon:
-echo %ICON%
-echo.
-
-:: ============================================================
-:: Launch Recaf WITHOUT console
-:: ============================================================
-
-start "" "%JAVAW%" -jar "%JAR%"
 
 endlocal
 exit /b 0
