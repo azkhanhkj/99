@@ -32,7 +32,7 @@ set "PROFILE_BAT=%USER_DIR%\profile.bat"
 reg add "HKCU\Software\Microsoft\Command Processor" /v AutoRun /t REG_SZ /d "\"%PROFILE_BAT%\"" /f >nul 2>&1
 
 :: 3. Set default JAVA_HOME to Java 17
-set "DEFAULT_JDK=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\17.0.20-101\x64"
+set "DEFAULT_JDK=%JAVA_HOME_17_X64%"
 if exist "%DEFAULT_JDK%" (
     setx JAVA_HOME "%DEFAULT_JDK%" >nul 2>&1
     setx JAVA_HOME "%DEFAULT_JDK%" /M >nul 2>&1

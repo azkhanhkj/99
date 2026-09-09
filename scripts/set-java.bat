@@ -7,11 +7,11 @@ if "%VERSION%"=="" (
 )
 
 set "TARGET_JDK="
-if "%VERSION%"=="8"  set "TARGET_JDK=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\8.0.504-1\x64"
-if "%VERSION%"=="11" set "TARGET_JDK=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\11.0.32-101\x64"
-if "%VERSION%"=="17" set "TARGET_JDK=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\17.0.20-101\x64"
-if "%VERSION%"=="21" set "TARGET_JDK=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64"
-if "%VERSION%"=="25" set "TARGET_JDK=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\25.0.4-101.0\x64"
+if "%VERSION%"=="8"  set "TARGET_JDK=%JAVA_HOME_8_X64%"
+if "%VERSION%"=="11" set "TARGET_JDK=%JAVA_HOME_11_X64%"
+if "%VERSION%"=="17" set "TARGET_JDK=%JAVA_HOME_17_X64%"
+if "%VERSION%"=="21" set "TARGET_JDK=%JAVA_HOME_21_X64%"
+if "%VERSION%"=="25" set "TARGET_JDK=%JAVA_HOME_25_X64%"
 
 if "%TARGET_JDK%"=="" (
     echo [ERROR] Unsupported Java version: %VERSION%

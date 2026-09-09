@@ -20,10 +20,11 @@ if exist "%~dp0setup-performance.bat" (
 )
 
 echo [2/8] Configuring default Java environment...
-set "DEFAULT_JAVA=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\17.0.20-101\x64"
+set "DEFAULT_JAVA=%JAVA_HOME_17_X64%"
 set "JAVA_HOME=%DEFAULT_JAVA%"
 set "PATH=%DEFAULT_JAVA%\bin;%PATH%"
-set "GHIDRA_JAVA_HOME=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64"
+
+set "GHIDRA_JAVA_HOME=%JAVA_HOME_21_X64%"
 setx JAVA_HOME "%DEFAULT_JAVA%" >nul 2>&1
 setx GHIDRA_JAVA_HOME "%GHIDRA_JAVA_HOME%" >nul 2>&1
 

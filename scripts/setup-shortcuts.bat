@@ -9,7 +9,7 @@ if "%TARGET_USER%"=="" set "TARGET_USER=ServerPremium"
 echo [*] Setting up Ghidra environment and shortcuts for %TARGET_USER%...
 
 :: Set GHIDRA_JAVA_HOME to JDK 21
-set "JDK21=C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64"
+set "JDK21=%JAVA_HOME_21_X64%"
 if exist "%JDK21%" (
     setx GHIDRA_JAVA_HOME "%JDK21%" >nul 2>&1
     setx GHIDRA_JAVA_HOME "%JDK21%" /M >nul 2>&1
