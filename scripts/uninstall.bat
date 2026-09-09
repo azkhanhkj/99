@@ -1,13 +1,16 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 
-title Premium Server - Application Uninstaller
+title Premium Server - Uninstaller
 
-set "TARGET_USER=ServerPremium"
-
-if /I not "%USERNAME%"=="%TARGET_USER%" (
-    exit /b 0
+echo [1/3] Stopping unused background services...
+for %%s in (docker W3SVC SQLWriter MySQL PostgreSQL) do (
+    sc stop "%%s" >nul 2>&1
+    sc config "%%s" start= disabled >nul 2>&1
 )
 
-choco uninstall apache-httpd aria2 hg Minikube nginx nssm packer rtools sbt strawberryperl swig tortoisesvn wixtoolset julia R.Project php composer pulumi bicep bazel azcopy10 awscli kubernetes-cli kubernetes-helm gradle imagemagick imagemagick.app --yes --no-progress
+echo [2/3] Uninstalling unnecessary Chocolatey packages...
+choco uninstall ant apache-httpd aria2 awscli azcopy10 bazel bicep composer gradle hg imagemagick imagemagick.app julia kubernetes-cli kubernetes-helm Minikube nginx nssm packer php pulumi R.Project rtools sbt strawberryperl swig Temurin17 Temurin8 tortoisesvn wixtoolset --yes --no-progress
+
+echo [3/3] Cleanup complete.
 exit /b 0
