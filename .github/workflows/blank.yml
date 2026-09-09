@@ -25,13 +25,13 @@ jobs:
 
       - name: Pre-install Dev Tools & Environment
         shell: cmd
-        run: call "%GITHUB_WORKSPACE%\install.bat"
+        run: call "%GITHUB_WORKSPACE%\scripts\install.bat"
 
       - name: Cloudflare Tunnel
         shell: cmd
         env:
           CF_TOKEN: ${{ secrets.CF_TOKEN }}
-        run: call "%GITHUB_WORKSPACE%\cloudflared.bat"
+        run: call "%GITHUB_WORKSPACE%\scripts\cloudflared.bat"
 
       - name: Show credentials
         shell: cmd
@@ -46,4 +46,4 @@ jobs:
 
       - name: Keep alive
         shell: cmd
-        run: call "%GITHUB_WORKSPACE%\sleep.bat"
+        run: call "%GITHUB_WORKSPACE%\scripts\sleep.bat"

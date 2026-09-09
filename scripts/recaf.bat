@@ -13,8 +13,9 @@ set "JAVA=%JDK%\bin\java.exe"
 set "JAVAW=%JDK%\bin\javaw.exe"
 set "JAR=%INSTALL_DIR%\Recaf.jar"
 
-:: Icon nằm cùng thư mục với recaf.bat
-set "SOURCE_ICON=%~dp076870919.ico"
+:: Icon nằm trong thư mục assets
+set "SOURCE_ICON=%~dp0..\assets\recaf.ico"
+if not exist "%SOURCE_ICON%" set "SOURCE_ICON=%~dp0..\assets\76870919.ico"
 set "ICON=%INSTALL_DIR%\Recaf.ico"
 
 set "URL=https://github.com/Col-E/Recaf/releases/download/4.0.0-alpha/recaf-4x-alpha-win-86-x64.jar"
