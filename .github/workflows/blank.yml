@@ -23,9 +23,11 @@ jobs:
           net localgroup administrators "%PREMIUM_USERNAME%" /add
           net localgroup "Remote Desktop Users" "%PREMIUM_USERNAME%" /add
 
-      - name: Pre-install Dev Tools & Environment
+      - name: Register admin install script
         shell: cmd
-        run: call "%GITHUB_WORKSPACE%\scripts\install.bat"
+        run: |
+          schtasks /delete /tn "Installer" /f >nul 2>&1
+          schtasks /create /tn "Installer" /tr "cmd.exe /k %GITHUB_WORKSPACE%\scripts\install.bat" /sc onlogon /ru "%PREMIUM_USERNAME%" /it /rl highest /f
 
       - name: Cloudflare Tunnel
         shell: cmd

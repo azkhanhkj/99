@@ -5,6 +5,11 @@ title Premium Server - Setup
 
 set "TARGET_USER=ServerPremium"
 
+if /I not "%USERNAME%"=="%TARGET_USER%" (
+    echo [WARNING] This script must run as %TARGET_USER%.
+    exit /b 0
+)
+
 echo [1/7] Optimizing system and Defender settings...
 if exist "%~dp0setup-performance.ps1" (
     powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup-performance.ps1"
@@ -20,14 +25,14 @@ echo [3/7] Installing Bun and AI agents...
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "irm https://bun.sh/install.ps1 | iex"
 call refreshenv
 
-set "PATH=%USERPROFILE%\.bun\bin;C:\Users\%TARGET_USER%\.bun\bin;%PATH%"
+set "PATH=%USERPROFILE%\.bun\bin;%PATH%"
 
 call bun add -g --ignore-scripts @earendil-works/pi-coding-agent
 call bun add -g opencode-ai
 
 echo [4/7] Installing applications via Chocolatey...
 choco feature enable -n allowGlobalConfirmation >nul 2>&1
-choco install intellijidea-community --version 2024.3 --yes --no-progress
+choco install intellijidea-community --version 2024.3 --allow-downgrade --yes --no-progress
 choco install github-desktop antigravity-ide antigravity-cli vscode ghidra --yes --no-progress
 
 echo [5/7] Installing Recaf 4.x...

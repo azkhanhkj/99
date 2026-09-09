@@ -15,7 +15,7 @@ d:\99\
 ├── docs/                        # Tài liệu đặc tả và kế hoạch thực hiện
 └── scripts/                     # Toàn bộ script cài đặt và tối ưu hóa
     ├── cloudflared.bat          # Cài đặt và cấu hình Cloudflare Tunnel service
-    ├── install.bat              # Script cài đặt chính (gọi trong workflow runner)
+    ├── install.bat              # Script cài đặt chính (gọi qua Scheduled Task onlogon)
     ├── recaf.bat                # Script tải và cấu hình Recaf 4.x
     ├── setup-performance.ps1    # Tối ưu Windows Defender exclusions & Graphics
     ├── setup-profile.ps1        # Cấu hình PowerShell profile với hàm set-java
@@ -26,9 +26,9 @@ d:\99\
 
 ## Các Tính Năng Đã Tối Ưu
 
-1. **Zero-Wait**:
-   - Toàn bộ công cụ (VS Code, IntelliJ IDEA, Antigravity IDE, Ghidra, Recaf 4.x, Bun, AI agents) được cài đặt trước (pre-installed) ngay trong GitHub Actions runner.
-   - Khi kết nối vào máy, toàn bộ ứng dụng đã sẵn sàng 100% trên màn hình Desktop.
+1. **Khởi Động Siêu Tốc & Cài Đặt Tự Động**:
+   - Pipeline GitHub Actions sẵn sàng kết nối chỉ trong 15-30 giây (tạo user, đăng ký Scheduled Task, mở Cloudflare Tunnel).
+   - Khi đăng nhập vào `ServerPremium`, Scheduled Task kích hoạt `scripts/install.bat` để cài đặt đầy đủ các ứng dụng người dùng (`antigravity-ide`, `bun`, `opencode`, `pi`, `intellijidea-community 2024.3`, `ghidra`, `recaf`, v.v.).
 
 2. **Chuyển Đổi Nhanh Phiên Bản Java (`set-java`)**:
    - Tận dụng kho JDK có sẵn của runner (`C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk`).
