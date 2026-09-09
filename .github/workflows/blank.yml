@@ -23,21 +23,15 @@ jobs:
           net localgroup administrators "%PREMIUM_USERNAME%" /add
           net localgroup "Remote Desktop Users" "%PREMIUM_USERNAME%" /add
 
+      - name: Pre-install Dev Tools & Environment
+        shell: cmd
+        run: call "%GITHUB_WORKSPACE%\install.bat"
+
       - name: Cloudflare Tunnel
         shell: cmd
         env:
           CF_TOKEN: ${{ secrets.CF_TOKEN }}
         run: call "%GITHUB_WORKSPACE%\cloudflared.bat"
-
-      - name: Register admin install script
-        shell: cmd
-        run: |
-          if not exist "C:\ProgramData\PremiumServer" (
-            mkdir "C:\ProgramData\PremiumServer"
-          )
-
-          schtasks /delete /tn "Installer" /f >nul 2>&1
-          schtasks /create /tn "Installer" /tr "cmd.exe /k %GITHUB_WORKSPACE%\install.bat" /sc onlogon /ru "%PREMIUM_USERNAME%" /it /rl highest /f
 
       - name: Show credentials
         shell: cmd
@@ -45,8 +39,8 @@ jobs:
           echo.
           echo ==========================================
           echo RDP Host : ${{ secrets.CF_HOSTNAME }}
-          echo User     : %RDP_USER%
-          echo Password : %RDP_PASS%
+          echo User     : %PREMIUM_USERNAME%
+          echo Password : %PREMIUM_PASS%
           echo ==========================================
           echo.
 
