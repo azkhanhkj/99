@@ -1,6 +1,6 @@
-# Premium Windows Dev Server (GitHub Actions RDP)
+# Premium Windows Dev Server (GitHub Actions)
 
-Môi trường máy chủ Windows RDP chạy trên GitHub Actions (`windows-2022`), được tối ưu hóa cho tốc độ khởi động (Zero-Wait RDP), trải nghiệm viết code và dịch ngược mã nguồn (Reverse Engineering).
+Môi trường máy chủ Windows chạy trên GitHub Actions (`windows-2022`), được tối ưu hóa cho tốc độ khởi động (Zero-Wait), trải nghiệm viết code và dịch ngược mã nguồn (Reverse Engineering).
 
 ## Cấu Trúc Dự Án
 
@@ -17,7 +17,7 @@ d:\99\
     ├── cloudflared.bat          # Cài đặt và cấu hình Cloudflare Tunnel service
     ├── install.bat              # Script cài đặt chính (gọi trong workflow runner)
     ├── recaf.bat                # Script tải và cấu hình Recaf 4.x
-    ├── setup-performance.ps1    # Tối ưu Windows Defender exclusions & RDP Graphics
+    ├── setup-performance.ps1    # Tối ưu Windows Defender exclusions & Graphics
     ├── setup-profile.ps1        # Cấu hình PowerShell profile với hàm set-java
     ├── setup-shortcuts.ps1      # Tự động tạo Desktop shortcuts cho các công cụ dev
     ├── sleep.bat                # Duy trì runner hoạt động
@@ -26,9 +26,9 @@ d:\99\
 
 ## Các Tính Năng Đã Tối Ưu
 
-1. **Zero-Wait RDP**:
+1. **Zero-Wait**:
    - Toàn bộ công cụ (VS Code, IntelliJ IDEA, Antigravity IDE, Ghidra, Recaf 4.x, Bun, AI agents) được cài đặt trước (pre-installed) ngay trong GitHub Actions runner.
-   - Khi kết nối RDP vào máy, toàn bộ ứng dụng đã sẵn sàng 100% trên màn hình Desktop.
+   - Khi kết nối vào máy, toàn bộ ứng dụng đã sẵn sàng 100% trên màn hình Desktop.
 
 2. **Chuyển Đổi Nhanh Phiên Bản Java (`set-java`)**:
    - Tận dụng kho JDK có sẵn của runner (`C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk`).
@@ -43,4 +43,4 @@ d:\99\
 
 3. **Mượt Mà & Không Giật Lag (Performance)**:
    - Thư mục code (`D:\`), toolcache và các tiến trình dev (`java.exe`, `node.exe`, `bun.exe`, `code.exe`, `git.exe`) đã được thêm vào danh sách loại trừ (Exclusion) của Windows Defender, giúp compile code và thao tác file cực nhanh.
-   - Tinh chỉnh đồ họa RDP: Tắt animation chuyển cảnh của Windows, giữ font ClearType sắc nét.
+   - Tinh chỉnh đồ họa: Tắt animation chuyển cảnh của Windows, giữ font ClearType sắc nét.

@@ -27,7 +27,8 @@ call bun add -g opencode-ai
 
 echo [4/7] Installing applications via Chocolatey...
 choco feature enable -n allowGlobalConfirmation >nul 2>&1
-choco install github-desktop intellijidea-community antigravity-ide vscode ghidra --yes --no-progress
+choco install intellijidea-community --version 2024.3 --allow-downgrade --yes --no-progress
+choco install github-desktop antigravity-ide antigravity-cli vscode ghidra --yes --no-progress
 
 echo [5/7] Installing Recaf 4.x...
 if exist "%~dp0recaf.bat" (
