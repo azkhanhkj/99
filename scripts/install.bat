@@ -11,8 +11,8 @@ if /I not "%USERNAME%"=="%TARGET_USER%" (
 )
 
 echo [1/8] Optimizing system and Defender settings...
-if exist "%~dp0setup-performance.ps1" (
-    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup-performance.ps1"
+if exist "%~dp0setup-performance.bat" (
+    call "%~dp0setup-performance.bat"
 )
 
 echo [2/8] Configuring default Java environment...
@@ -44,13 +44,13 @@ if exist "%~dp0recaf.bat" (
 )
 
 echo [6/8] Configuring PowerShell profile...
-if exist "%~dp0setup-profile.ps1" (
-    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup-profile.ps1" -TargetUser "%TARGET_USER%"
+if exist "%~dp0setup-profile.bat" (
+    call "%~dp0setup-profile.bat" "%TARGET_USER%"
 )
 
 echo [7/8] Generating Ghidra shortcut...
-if exist "%~dp0setup-shortcuts.ps1" (
-    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup-shortcuts.ps1" -TargetUser "%TARGET_USER%"
+if exist "%~dp0setup-shortcuts.bat" (
+    call "%~dp0setup-shortcuts.bat" "%TARGET_USER%"
 )
 
 echo [8/8] Uninstalling bloatware and stopping unused services...

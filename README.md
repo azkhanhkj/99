@@ -17,9 +17,9 @@ d:\99\
     ├── cloudflared.bat          # Cài đặt và cấu hình Cloudflare Tunnel service
     ├── install.bat              # Script cài đặt chính (gọi qua Scheduled Task onlogon)
     ├── recaf.bat                # Script tải và cấu hình Recaf 4.x
-    ├── setup-performance.ps1    # Tối ưu Windows Defender exclusions & Graphics
-    ├── setup-profile.ps1        # Cấu hình PowerShell profile với hàm set-java
-    ├── setup-shortcuts.ps1      # Tạo Desktop shortcut cho Ghidra
+    ├── setup-performance.bat    # Tối ưu Windows Defender exclusions & Graphics
+    ├── setup-profile.bat        # Cấu hình PowerShell profile với hàm set-java
+    ├── setup-shortcuts.bat      # Tạo Desktop shortcut cho Ghidra
     ├── sleep.bat                # Duy trì runner hoạt động
     └── uninstall.bat            # Gỡ bỏ các phần mềm mặc định không cần thiết
 ```
