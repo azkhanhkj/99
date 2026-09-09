@@ -44,3 +44,9 @@ d:\99\
 3. **Mượt Mà & Không Giật Lag (Performance)**:
    - Thư mục code (`D:\`), toolcache và các tiến trình dev (`java.exe`, `node.exe`, `bun.exe`, `code.exe`, `git.exe`) đã được thêm vào danh sách loại trừ (Exclusion) của Windows Defender, giúp compile code và thao tác file cực nhanh.
    - Tinh chỉnh đồ họa: Tắt animation chuyển cảnh của Windows, giữ font ClearType sắc nét.
+
+4. **Tối Ưu Dung Lượng & Dọn Sạch Bloatware (`uninstall.bat`)**:
+   - Tự động tắt và vô hiệu hóa các service chạy ngầm tốn RAM/CPU: Docker, IIS (`W3SVC`), `SQLWriter`, `MySQL`, `PostgreSQL`, `MongoDB`.
+   - Gỡ bỏ các ứng dụng và database cồng kềnh: Azure Cosmos DB Emulator, MongoDB, MySQL, PostgreSQL, Epic Games Launcher, Unity Hub.
+   - Dọn sạch các bộ toolchain/SDK dung lượng lớn không cần thiết (Android SDK/NDK, Haskell GHCup, Julia, Miniconda, R/Rtools, LLVM, InnoSetup/NSIS), giải phóng hơn 40 - 50 GB dung lượng ổ C.
+
