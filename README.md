@@ -17,8 +17,9 @@ d:\99\
     ├── cloudflared.bat          # Cài đặt và cấu hình Cloudflare Tunnel service
     ├── install.bat              # Script cài đặt chính (gọi qua Scheduled Task onlogon)
     ├── recaf.bat                # Script tải và cấu hình Recaf 4.x
+    ├── set-java.bat             # Chuyển đổi nhanh các phiên bản OpenJDK (8, 11, 17, 21, 25)
     ├── setup-performance.bat    # Tối ưu Windows Defender exclusions & Graphics
-    ├── setup-profile.bat        # Cấu hình PowerShell profile với hàm set-java
+    ├── setup-profile.bat        # Cấu hình terminal profile và triển khai lệnh set-java
     ├── setup-shortcuts.bat      # Tạo Desktop shortcut cho Ghidra
     ├── sleep.bat                # Duy trì runner hoạt động
     └── uninstall.bat            # Gỡ bỏ các phần mềm mặc định không cần thiết
@@ -32,8 +33,8 @@ d:\99\
 
 2. **Chuyển Đổi Nhanh Phiên Bản Java (`set-java`)**:
    - Tận dụng kho JDK có sẵn của runner (`C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk`).
-   - Mở terminal PowerShell và gõ:
-     ```powershell
+   - Mở bất kỳ terminal nào (CMD hoặc PowerShell) và gõ:
+     ```cmd
      set-java 8    # Đổi sang OpenJDK 8
      set-java 11   # Đổi sang OpenJDK 11
      set-java 17   # Đổi sang OpenJDK 17

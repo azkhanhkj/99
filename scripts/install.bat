@@ -43,7 +43,7 @@ if exist "%~dp0recaf.bat" (
     call "%~dp0recaf.bat"
 )
 
-echo [6/8] Configuring PowerShell profile...
+echo [6/8] Configuring terminal profile and set-java command...
 if exist "%~dp0setup-profile.bat" (
     call "%~dp0setup-profile.bat" "%TARGET_USER%"
 )
