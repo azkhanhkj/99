@@ -25,7 +25,6 @@ set "URL=https://github.com/Col-E/Recaf/releases/download/4.0.0-alpha/recaf-4x-a
 
 net session >nul 2>&1 || (
     echo [ERROR] Run this script as Administrator.
-    pause
     exit /b 1
 )
 
@@ -36,14 +35,12 @@ net session >nul 2>&1 || (
 if not exist "%JAVA%" (
     echo [ERROR] Java executable not found:
     echo %JAVA%
-    pause
     exit /b 1
 )
 
 if not exist "%JAVAW%" (
     echo [ERROR] javaw.exe not found:
     echo %JAVAW%
-    pause
     exit /b 1
 )
 
@@ -54,7 +51,6 @@ set "PATH=%JDK%\bin;%PATH%"
 
 if errorlevel 1 (
     echo [ERROR] Java 25 is not working.
-    pause
     exit /b 1
 )
 
@@ -69,7 +65,6 @@ if not exist "%INSTALL_DIR%" (
 if not exist "%INSTALL_DIR%" (
     echo [ERROR] Cannot create:
     echo %INSTALL_DIR%
-    pause
     exit /b 1
 )
 
@@ -87,13 +82,11 @@ curl.exe -L --fail --silent --show-error ^
 
 if errorlevel 1 (
     echo [ERROR] Failed to download Recaf.
-    pause
     exit /b 1
 )
 
 if not exist "%JAR%" (
     echo [ERROR] Recaf.jar was not downloaded.
-    pause
     exit /b 1
 )
 
@@ -104,7 +97,6 @@ if not exist "%JAR%" (
 if not exist "%SOURCE_ICON%" (
     echo [ERROR] Icon not found:
     echo %SOURCE_ICON%
-    pause
     exit /b 1
 )
 
@@ -114,14 +106,12 @@ copy /Y "%SOURCE_ICON%" "%ICON%" >nul 2>&1
 
 if errorlevel 1 (
     echo [ERROR] Failed to copy icon.
-    pause
     exit /b 1
 )
 
 if not exist "%ICON%" (
     echo [ERROR] Installed icon was not found:
     echo %ICON%
-    pause
     exit /b 1
 )
 
