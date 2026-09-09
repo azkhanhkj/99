@@ -3,7 +3,7 @@
 ## 1. Mục tiêu (Goals)
 - **Zero-Wait RDP**: Loại bỏ việc phải chờ 10-15 phút sau khi đăng nhập RDP để cài đặt phần mềm. Mọi IDE, Java, Ghidra, Recaf, AI agent đều sẵn sàng ngay khi kết nối.
 - **Tận dụng tài nguyên có sẵn**: Sử dụng trực tiếp Java 8, 11, 17, 21, 25 trong `C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk`, loại bỏ việc tải lại bằng Chocolatey.
-- **Tối ưu trải nghiệm lập trình (DX)**: Cung cấp PowerShell Profile tiện ích với lệnh switch Java nhanh (`set-java`), alias cho Git và AI agents (`pi`, `opencode`), tự động tạo Desktop shortcut cho toàn bộ công cụ.
+- **Tối ưu trải nghiệm lập trình (DX)**: Cung cấp PowerShell Profile tiện ích với lệnh switch Java nhanh (`set-java`), tự động tạo Desktop shortcut cho toàn bộ công cụ.
 - **Tối ưu hiệu năng Windows & RDP**: Loại trừ Windows Defender cho các thư mục lập trình và tiến trình dev; tắt animations để cuộn màn hình và gõ phím qua RDP mượt mà nhất.
 
 ---
@@ -54,19 +54,6 @@ Tự động copy vào thư mục Profile của user `ServerPremium` (`Documents
   - `set-java 17` -> Java 17.0.20-101
   - `set-java 21` -> Java 21.0.12-101.0
   - `set-java 25` -> Java 25.0.4-101.0
-- **Git Aliases**:
-  - `gs` -> `git status`
-  - `ga` -> `git add`
-  - `gc` -> `git commit`
-  - `gp` -> `git push`
-  - `gl` -> `git log --oneline -n 10`
-  - `gd` -> `git diff`
-- **AI Agent Aliases**:
-  - `pi` -> `bunx @earendil-works/pi-coding-agent` hoặc `pi-coding-agent`
-  - `open` -> `opencode-ai`
-- **IDE Aliases**:
-  - `c` / `code` -> VS Code
-  - `idea` -> IntelliJ IDEA
 
 ### 2.4. Tối ưu Workflows (`.github/workflows/blank.yml` & `blank2.yml`)
 Quy trình thực thi tuần tự trong GitHub Actions:
