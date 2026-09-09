@@ -35,6 +35,9 @@ choco feature enable -n allowGlobalConfirmation >nul 2>&1
 choco install intellijidea-community --version 2024.3 --allow-downgrade --yes --no-progress
 choco install github-desktop antigravity-ide antigravity-cli vscode ghidra --yes --no-progress
 
+agy plugin install https://github.com/obra/superpowers
+pi install git:github.com/obra/superpowers
+
 echo [5/8] Installing Recaf 4.x...
 if exist "%~dp0recaf.bat" (
     call "%~dp0recaf.bat"
