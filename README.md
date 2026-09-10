@@ -18,9 +18,7 @@ d:\99\
     ├── install.bat              # Script cài đặt chính (gọi qua Scheduled Task onlogon)
     ├── paseo.bat                # Script tải và cài đặt Paseo Desktop & CLI
     ├── recaf.bat                # Script tải và cấu hình Recaf 4.x
-    ├── set-java.bat             # Chuyển đổi nhanh các phiên bản OpenJDK (8, 11, 17, 21, 25)
     ├── setup-performance.bat    # Tối ưu Windows Defender exclusions & Graphics
-    ├── setup-profile.bat        # Cấu hình terminal profile và triển khai lệnh set-java
     ├── sleep.bat                # Duy trì runner hoạt động
     └── uninstall.bat            # Gỡ bỏ các phần mềm mặc định không cần thiết
 ```
@@ -31,22 +29,11 @@ d:\99\
    - Pipeline GitHub Actions sẵn sàng kết nối chỉ trong 15-30 giây (tạo user, đăng ký Scheduled Task, mở Cloudflare Tunnel).
    - Khi đăng nhập vào `ServerPremium`, Scheduled Task kích hoạt `scripts/install.bat` để cài đặt đầy đủ các ứng dụng người dùng (`antigravity-ide`, `bun`, `opencode`, `pi`, `paseo` (Desktop & CLI), `unikey`, `intellijidea-community 2024.3`, `ghidra`, `recaf`, v.v.).
 
-2. **Chuyển Đổi Nhanh Phiên Bản Java (`set-java`)**:
-   - Tận dụng kho JDK có sẵn của runner (`C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk`).
-   - Mở bất kỳ terminal nào (CMD hoặc PowerShell) và gõ:
-     ```cmd
-     set-java 8    # Đổi sang OpenJDK 8
-     set-java 11   # Đổi sang OpenJDK 11
-     set-java 17   # Đổi sang OpenJDK 17
-     set-java 21   # Đổi sang OpenJDK 21
-     set-java 25   # Đổi sang OpenJDK 25
-     ```
-
-3. **Mượt Mà & Không Giật Lag (Performance)**:
+2. **Mượt Mà & Không Giật Lag (Performance)**:
    - Thư mục code (`D:\`), toolcache và các tiến trình dev (`java.exe`, `node.exe`, `bun.exe`, `code.exe`, `git.exe`) đã được thêm vào danh sách loại trừ (Exclusion) của Windows Defender, giúp compile code và thao tác file cực nhanh.
    - Tinh chỉnh đồ họa: Tắt animation chuyển cảnh của Windows, giữ font ClearType sắc nét.
 
-4. **Tối Ưu Dung Lượng & Dọn Sạch Bloatware (`uninstall.bat`)**:
+3. **Tối Ưu Dung Lượng & Dọn Sạch Bloatware (`uninstall.bat`)**:
    - Tự động tắt và vô hiệu hóa các service chạy ngầm tốn RAM/CPU: Docker, IIS (`W3SVC`), `SQLWriter`, `MySQL`, `PostgreSQL`, `MongoDB`.
    - Gỡ bỏ các ứng dụng và database cồng kềnh: Azure Cosmos DB Emulator, MongoDB, MySQL, PostgreSQL, Epic Games Launcher, Unity Hub.
    - Dọn sạch các bộ toolchain/SDK dung lượng lớn không cần thiết (Android SDK/NDK, Haskell GHCup, Julia, Miniconda, R/Rtools, LLVM, InnoSetup/NSIS), giải phóng hơn 40 - 50 GB dung lượng ổ C.
