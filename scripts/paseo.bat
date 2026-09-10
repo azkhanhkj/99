@@ -35,14 +35,4 @@ if exist "%EXE%" (
     )
 )
 
-:: 2. Install Paseo CLI globally
-echo [*] Checking Paseo CLI...
-where paseo >nul 2>&1
-if errorlevel 1 (
-    echo [*] Installing Paseo CLI globally [@getpaseo/cli]...
-    call npm install -g @getpaseo/cli
-) else (
-    echo [*] Paseo CLI is already installed.
-)
-
 exit /b 0
