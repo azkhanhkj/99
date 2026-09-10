@@ -64,19 +64,20 @@ if exist "%SOURCE_ICON%" (
     copy /Y "%SOURCE_ICON%" "%ICON%" >nul 2>&1
 )
 
-echo [*] Creating shortcuts for Recaf 4.x...
+echo [*] Creating shortcut for Recaf 4.x...
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
     "$ws = New-Object -ComObject WScript.Shell;" ^
-    "$desktops = @('C:\Users\%TARGET_USER%\Desktop', [Environment]::GetFolderPath('CommonDesktopDirectory')) | Where-Object { Test-Path $_ };" ^
-    "foreach ($d in $desktops) {" ^
-    "    $s = $ws.CreateShortcut(\"$d\Recaf.lnk\");" ^
-    "    $s.TargetPath = '%JAVAW%';" ^
-    "    $s.Arguments = '-jar \"\"%JAR%\"\"';" ^
-    "    $s.WorkingDirectory = '%INSTALL_DIR%';" ^
-    "    if (Test-Path '%ICON%') { $s.IconLocation = '%ICON%,0' };" ^
-    "    $s.Description = 'Recaf 4.x Bytecode Editor';" ^
-    "    try { $s.Save() } catch {}" ^
-    "}"
+    "$userDesktop = 'C:\Users\%TARGET_USER%\Desktop';" ^
+    "$publicDesktop = [Environment]::GetFolderPath('CommonDesktopDirectory');" ^
+    "$targetDir = if (Test-Path $userDesktop) { $userDesktop } else { $publicDesktop };" ^
+    "if (Test-Path \"$publicDesktop\Recaf.lnk\") { Remove-Item \"$publicDesktop\Recaf.lnk\" -Force -ErrorAction SilentlyContinue };" ^
+    "$s = $ws.CreateShortcut(\"$targetDir\Recaf.lnk\");" ^
+    "$s.TargetPath = '%JAVAW%';" ^
+    "$s.Arguments = '-jar \"\"%JAR%\"\"';" ^
+    "$s.WorkingDirectory = '%INSTALL_DIR%';" ^
+    "if (Test-Path '%ICON%') { $s.IconLocation = '%ICON%,0' };" ^
+    "$s.Description = 'Recaf 4.x Bytecode Editor';" ^
+    "try { $s.Save() } catch {}"
 
 echo [*] Recaf 4.x installed successfully.
 exit /b 0
