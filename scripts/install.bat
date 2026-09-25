@@ -35,15 +35,6 @@ if errorlevel 1 (
 )
 set "PATH=%USERPROFILE%\.bun\bin;%PATH%"
 
-where pi >nul 2>&1
-if errorlevel 1 (
-    call bun add -g --ignore-scripts @earendil-works/pi-coding-agent
-)
-where opencode >nul 2>&1
-if errorlevel 1 (
-    call bun add -g opencode-ai
-)
-
 echo [4/7] Installing applications via Chocolatey...
 choco feature enable -n allowGlobalConfirmation >nul 2>&1
 choco install intellijidea-community --version 2024.3.5 --allow-downgrade --yes --no-progress
@@ -51,11 +42,6 @@ choco install github-desktop opencode opencode-desktop antigravity-ide antigravi
 
 where agy >nul 2>&1 && call agy plugin install https://github.com/obra/superpowers
 where pi >nul 2>&1 && call pi install git:github.com/obra/superpowers
-
-echo [5/7] Installing Paseo Desktop and CLI...
-if exist "%~dp0paseo.bat" (
-    call "%~dp0paseo.bat" "%TARGET_USER%"
-)
 
 echo [6/7] Installing Recaf 4.x...
 if exist "%~dp0recaf.bat" (
