@@ -35,10 +35,12 @@ if errorlevel 1 (
 )
 set "PATH=%USERPROFILE%\.bun\bin;%PATH%"
 
+bun install -g --trust @opencode/cli
+
 echo [4/7] Installing applications via Chocolatey...
 choco feature enable -n allowGlobalConfirmation >nul 2>&1
 choco install intellijidea-community --version 2024.3.5 --allow-downgrade --yes --no-progress
-choco install github-desktop opencode opencode-desktop antigravity-ide antigravity-cli vscode ghidra unikey --yes --no-progress
+choco install github-desktop antigravity-ide antigravity-cli vscode ghidra unikey --yes --no-progress
 
 where agy >nul 2>&1 && call agy plugin install https://github.com/obra/superpowers
 where pi >nul 2>&1 && call pi install git:github.com/obra/superpowers
