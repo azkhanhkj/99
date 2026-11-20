@@ -1,4 +1,4 @@
-name: Premium server
+name: Premium server 2
 
 on:
   workflow_dispatch:
