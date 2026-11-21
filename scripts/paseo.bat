@@ -8,7 +8,7 @@ if "%TARGET_USER%"=="" set "TARGET_USER=ServerPremium"
 
 set "INSTALL_DIR=C:\Users\%TARGET_USER%\AppData\Local\Programs\Paseo"
 set "EXE=%INSTALL_DIR%\Paseo.exe"
-set "VERSION=0.7.2"
+set "VERSION=0.16.2"
 set "SETUP_URL=https://github.com/getpaseo/paseo/releases/download/v%VERSION%/Paseo-Setup-%VERSION%-x64.exe"
 set "TEMP_SETUP=%TEMP%\Paseo-Setup.exe"
 
